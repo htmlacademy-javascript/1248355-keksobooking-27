@@ -16,63 +16,60 @@ const Rooms = {
   MIN: 1,
   MAX: 4
 };
+
 const NUMBER_OF_DECIMALS = 5;
+
 const NUMBER_OF_ADVERTISEMENTS = 10;
+
 const IMG_NUMBERS = Array.from({ length: NUMBER_OF_ADVERTISEMENTS }, (element, index) => index + 1);
+
 const TYPES = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
-const CHECKINS = ['12:00', '13:00', '14:00'];
-const CHECKOUTS = ['12:00', '13:00', '14:00'];
+
+const CHECKTIMES = ['12:00', '13:00', '14:00'];
+
 const FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+
 const PHOTOS = ['https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'];
 
 const checkNumbers = (...numbers) => numbers.every((number) => typeof number === 'number' && number >= 0);
 
-const swapTwoNumbers = (firstNumber, secondNumber) => [secondNumber, firstNumber];
-
-const getRandomDecimal = (min, max, numberOfDecimals) => {
+const getRandomDecimal = (min, max, numberOfDecimals = 0) => {
   const isTargetNumbers = checkNumbers(min, max, numberOfDecimals);
   if (!isTargetNumbers) {
     return NaN;
   }
-  const [tempMin, tempMax] = min > max ? swapTwoNumbers(min, max) : [min, max];
+
+  const [tempMin, tempMax] = min > max ? [max, min] : [min, max];
   const randomNumber = (Math.random() * (tempMax - tempMin) + tempMin);
   return +randomNumber.toFixed(numberOfDecimals);
 };
 
-const getRandomNumber = (min, max) => getRandomDecimal(min, max, 0);
+const getRandomNumber = (min, max) => getRandomDecimal(min, max);
 
-const getRandomArrayIndex = (elements, from = 0) => getRandomNumber(from, elements.length - 1);
+const getRandomArrayIndex = (elements) => getRandomNumber(0, elements.length - 1);
 
 const getRandomArrayElement = (elements) => elements[getRandomArrayIndex(elements)];
 
 const createRandomElementsArray = (elements, isRandomLength = true) => {
-  const arr = [];
-  const randomElements = {};
-  let arrLength = getRandomNumber(1, elements.length);
-  if (!isRandomLength) {
-    arrLength = elements.length;
+  const arrCopy = [...elements];
+  for (let i = arrCopy.length - 1; i > 0; i--) {
+    const randomIndex = getRandomNumber(0, i);
+    [arrCopy[i], arrCopy[randomIndex]] = [arrCopy[randomIndex], arrCopy[i]];
   }
-  let randomElement;
-  for (let i = 0; i < arrLength; i++) {
-    do {
-      randomElement = getRandomArrayElement(elements);
-    } while (randomElements[randomElement]);
-    arr.push(randomElement);
-    randomElements[randomElement] = 'pushed';
-  }
-  return arr;
+
+  const arrLength = isRandomLength ? getRandomNumber(1, arrCopy.length) : arrCopy.length;
+  return arrCopy.slice(0, arrLength);
 };
 
-const randomImgNumbers = createRandomElementsArray(IMG_NUMBERS, false);
-
-const createAdvertisement = (element, index) => {
+const createAdvertisementsFillerFn = (photoData) => (element, index) => {
   const randomLat = getRandomDecimal(Coordinates.LAT_MIN, Coordinates.LAT_MAX, NUMBER_OF_DECIMALS);
   const randomLng = getRandomDecimal(Coordinates.LNG_MIN, Coordinates.LNG_MAX, NUMBER_OF_DECIMALS);
+
   return {
     author: {
-      avatar: `img/avatars/user${randomImgNumbers[index] < 10 ? (0).toString() + randomImgNumbers[index] : randomImgNumbers[index]}.png`
+      avatar: `img/avatars/user${photoData[index] < 10 ? (0).toString() + photoData[index] : photoData[index]}.png`
     },
     offer: {
       title: 'Лучший отель',
@@ -81,8 +78,8 @@ const createAdvertisement = (element, index) => {
       type: getRandomArrayElement(TYPES),
       rooms: getRandomNumber(Rooms.MIN, Rooms.MAX),
       guests: getRandomNumber(Guests.MIN, Guests.MAX),
-      checkin: getRandomArrayElement(CHECKINS),
-      checkout: getRandomArrayElement(CHECKOUTS),
+      checkin: getRandomArrayElement(CHECKTIMES),
+      checkout: getRandomArrayElement(CHECKTIMES),
       features: createRandomElementsArray(FEATURES),
       description: 'Все комнаты в хорошем состоянии',
       photos: createRandomElementsArray(PHOTOS)
@@ -94,4 +91,4 @@ const createAdvertisement = (element, index) => {
   };
 };
 
-Array.from({ length: NUMBER_OF_ADVERTISEMENTS }, createAdvertisement);
+Array.from({ length: NUMBER_OF_ADVERTISEMENTS }, createAdvertisementsFillerFn(createRandomElementsArray(IMG_NUMBERS, false)));
