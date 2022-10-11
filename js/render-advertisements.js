@@ -29,6 +29,44 @@ const typesMap = {
 const adsContainerElement = document.querySelector(QuerySelector.ADS_CONTAINER);
 const adTemplateElement = document.querySelector(QuerySelector.ADS_TEMPLATE).content.querySelector(QuerySelector.AD);
 
+const addPhotos = (urls, container) => {
+  if (!urls) {
+    hideElement(container);
+    return;
+  }
+
+  urls.forEach((url, index) => {
+    const photoElement = container.querySelector(QuerySelector.PHOTO).cloneNode(true);
+    photoElement.src = url;
+
+    if (index === 0) {
+      container.innerHTML = '';
+    }
+
+    container.append(photoElement);
+  });
+};
+
+
+const addFeatures = (data, container) => {
+  if (!data) {
+    hideElement(container);
+    return;
+  }
+
+  const featureElements = container.querySelectorAll(QuerySelector.FEATURE);
+  featureElements.forEach((featureElement) => {
+    const isFeatureElement = data.some((dataElement) => {
+      const modifer = `${QuerySelector.FEATURE}--${dataElement}`.slice(1);
+      return featureElement.classList.contains(modifer);
+    });
+
+    if (!isFeatureElement) {
+      featureElement.remove();
+    }
+  });
+};
+
 const generateSimilarAdvertismentsFragment = (adData) => {
   const fragment = document.createDocumentFragment();
 
@@ -42,7 +80,6 @@ const generateSimilarAdvertismentsFragment = (adData) => {
     const capasityElement = adElement.querySelector(QuerySelector.CAPASITY);
     const timeElement = adElement.querySelector(QuerySelector.TIME);
     const featuresContainerElement = adElement.querySelector(QuerySelector.FEATURES);
-    const featureElements = featuresContainerElement.querySelectorAll(QuerySelector.FEATURE);
     const descriptionElement = adElement.querySelector(QuerySelector.DESCRIPTION);
     const photosContainerElement = adElement.querySelector(QuerySelector.PHOTOS);
 
@@ -55,38 +92,8 @@ const generateSimilarAdvertismentsFragment = (adData) => {
     timeElement.textContent = `Заезд после ${data.offer.checkin || hideElement(timeElement)}, выезд до ${data.offer.checkout || hideElement(timeElement)}`;
     descriptionElement.textContent = data.offer.description || hideElement(descriptionElement);
 
-    // Блок генерации фоток
-    if (!data.offer.photos) {
-      hideElement(photosContainerElement);
-    } else {
-      data.offer.photos.forEach((photo, index) => {
-        const photoElement = photosContainerElement.querySelector(QuerySelector.PHOTO).cloneNode(true);
-        photoElement.src = photo;
-
-        if (index === 0) {
-          photosContainerElement.innerHTML = '';
-        }
-
-        photosContainerElement.append(photoElement);
-      });
-    }
-
-    // Блок генерации удобств
-    featureElements.forEach((featureElement) => {
-      if (!data.offer.features) {
-        hideElement(featuresContainerElement);
-        return;
-      }
-
-      const isFeatureElement = data.offer.features.some((feature) => {
-        const modifer = `${QuerySelector.FEATURE}--${feature}`.slice(1);
-        return featureElement.classList.contains(modifer);
-      });
-
-      if (!isFeatureElement) {
-        featureElement.remove();
-      }
-    });
+    addPhotos(data.offer.photos, photosContainerElement);
+    addFeatures(data.offer.features, featuresContainerElement);
 
     fragment.append(adElement);
   });
