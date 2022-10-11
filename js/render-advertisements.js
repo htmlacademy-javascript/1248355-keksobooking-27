@@ -1,7 +1,7 @@
 import { generateData } from './mock-data.js';
 import { hideElement } from './util.js';
 
-const QuerySelectors = {
+const QuerySelector = {
   ADS_CONTAINER: '.map__canvas',
   ADS_TEMPLATE: '#card',
   AD: '.popup',
@@ -26,25 +26,25 @@ const typesMap = {
   hotel: 'Отель'
 };
 
-const adsContainerElement = document.querySelector(QuerySelectors.ADS_CONTAINER);
-const adTemplateElement = document.querySelector(QuerySelectors.ADS_TEMPLATE).content.querySelector(QuerySelectors.AD);
+const adsContainerElement = document.querySelector(QuerySelector.ADS_CONTAINER);
+const adTemplateElement = document.querySelector(QuerySelector.ADS_TEMPLATE).content.querySelector(QuerySelector.AD);
 
 const generateSimilarAdvertismentsFragment = (adData) => {
   const fragment = document.createDocumentFragment();
 
   adData.forEach((data) => {
     const adElement = adTemplateElement.cloneNode(true);
-    const titleElement = adElement.querySelector(QuerySelectors.TITLE);
-    const avatarElement = adElement.querySelector(QuerySelectors.AVATAR);
-    const addressElement = adElement.querySelector(QuerySelectors.ADDRESS);
-    const priceElement = adElement.querySelector(QuerySelectors.PRICE);
-    const typeElement = adElement.querySelector(QuerySelectors.TYPE);
-    const capasityElement = adElement.querySelector(QuerySelectors.CAPASITY);
-    const timeElement = adElement.querySelector(QuerySelectors.TIME);
-    const featuresContainerElement = adElement.querySelector(QuerySelectors.FEATURES);
-    const featureElements = featuresContainerElement.querySelectorAll(QuerySelectors.FEATURE);
-    const descriptionElement = adElement.querySelector(QuerySelectors.DESCRIPTION);
-    const photosContainerElement = adElement.querySelector(QuerySelectors.PHOTOS);
+    const titleElement = adElement.querySelector(QuerySelector.TITLE);
+    const avatarElement = adElement.querySelector(QuerySelector.AVATAR);
+    const addressElement = adElement.querySelector(QuerySelector.ADDRESS);
+    const priceElement = adElement.querySelector(QuerySelector.PRICE);
+    const typeElement = adElement.querySelector(QuerySelector.TYPE);
+    const capasityElement = adElement.querySelector(QuerySelector.CAPASITY);
+    const timeElement = adElement.querySelector(QuerySelector.TIME);
+    const featuresContainerElement = adElement.querySelector(QuerySelector.FEATURES);
+    const featureElements = featuresContainerElement.querySelectorAll(QuerySelector.FEATURE);
+    const descriptionElement = adElement.querySelector(QuerySelector.DESCRIPTION);
+    const photosContainerElement = adElement.querySelector(QuerySelector.PHOTOS);
 
     avatarElement.src = data.author.avatar || hideElement(avatarElement);
     titleElement.textContent = data.offer.title || hideElement(titleElement);
@@ -60,7 +60,7 @@ const generateSimilarAdvertismentsFragment = (adData) => {
       hideElement(photosContainerElement);
     } else {
       data.offer.photos.forEach((photo, index) => {
-        const photoElement = photosContainerElement.querySelector(QuerySelectors.PHOTO).cloneNode(true);
+        const photoElement = photosContainerElement.querySelector(QuerySelector.PHOTO).cloneNode(true);
         photoElement.src = photo;
 
         if (index === 0) {
@@ -79,7 +79,7 @@ const generateSimilarAdvertismentsFragment = (adData) => {
       }
 
       const isFeatureElement = data.offer.features.some((feature) => {
-        const modifer = `${QuerySelectors.FEATURE}--${feature}`.slice(1);
+        const modifer = `${QuerySelector.FEATURE}--${feature}`.slice(1);
         return featureElement.classList.contains(modifer);
       });
 
