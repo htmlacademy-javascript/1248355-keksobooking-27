@@ -35,7 +35,7 @@ const PHOTOS = ['https://assets.htmlacademy.ru/content/intensive/javascript-1/ke
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'];
 
-const createAdvertisementsFillerFn = (photoData) => (element, index) => {
+const createDataFillerFn = (photoData) => (_, index) => {
   const randomLat = getRandomDecimal(Coordinates.LAT_MIN, Coordinates.LAT_MAX, NUMBER_OF_DECIMALS);
   const randomLng = getRandomDecimal(Coordinates.LNG_MIN, Coordinates.LNG_MAX, NUMBER_OF_DECIMALS);
 
@@ -63,6 +63,6 @@ const createAdvertisementsFillerFn = (photoData) => (element, index) => {
   };
 };
 
-const generateAdvertisements = () => Array.from({ length: NUMBER_OF_ADVERTISEMENTS }, createAdvertisementsFillerFn(createRandomElementsArray(IMG_NUMBERS, false)));
+const generateData = (count = NUMBER_OF_ADVERTISEMENTS) => Array.from({ length: count }, createDataFillerFn(createRandomElementsArray(IMG_NUMBERS, false)));
 
-export { generateAdvertisements };
+export { generateData };

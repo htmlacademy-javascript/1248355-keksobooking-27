@@ -1,1 +1,1 @@
-import './similar-advertisements.js';
+import './render-advertisements.js';

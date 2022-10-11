@@ -1,4 +1,4 @@
-import { generateAdvertisements } from './generate-advertisements.js';
+import { generateData } from './mock-data.js';
 import { hideElement } from './util.js';
 
 const QuerySelectors = {
@@ -41,8 +41,8 @@ const generateSimilarAdvertismentsFragment = (adData) => {
     const typeElement = adElement.querySelector(QuerySelectors.TYPE);
     const capasityElement = adElement.querySelector(QuerySelectors.CAPASITY);
     const timeElement = adElement.querySelector(QuerySelectors.TIME);
-    const featureElements = adElement.querySelectorAll(QuerySelectors.FEATURE);
     const featuresContainerElement = adElement.querySelector(QuerySelectors.FEATURES);
+    const featureElements = featuresContainerElement.querySelectorAll(QuerySelectors.FEATURE);
     const descriptionElement = adElement.querySelector(QuerySelectors.DESCRIPTION);
     const photosContainerElement = adElement.querySelector(QuerySelectors.PHOTOS);
 
@@ -58,18 +58,18 @@ const generateSimilarAdvertismentsFragment = (adData) => {
     // Блок генерации фоток
     if (!data.offer.photos) {
       hideElement(photosContainerElement);
+    } else {
+      data.offer.photos.forEach((photo, index) => {
+        const photoElement = photosContainerElement.querySelector(QuerySelectors.PHOTO).cloneNode(true);
+        photoElement.src = photo;
+
+        if (index === 0) {
+          photosContainerElement.innerHTML = '';
+        }
+
+        photosContainerElement.append(photoElement);
+      });
     }
-
-    data.offer.photos?.forEach((photo, index) => {
-      const photoElement = photosContainerElement.querySelector(QuerySelectors.PHOTO).cloneNode(true);
-      photoElement.src = photo;
-
-      if (index === 0) {
-        photosContainerElement.innerHTML = '';
-      }
-
-      photosContainerElement.append(photoElement);
-    });
 
     // Блок генерации удобств
     featureElements.forEach((featureElement) => {
@@ -91,9 +91,7 @@ const generateSimilarAdvertismentsFragment = (adData) => {
     fragment.append(adElement);
   });
 
-
   return fragment;
 };
 
-
-adsContainerElement.append(generateSimilarAdvertismentsFragment(generateAdvertisements()).firstChild);
+adsContainerElement.append(generateSimilarAdvertismentsFragment(generateData(1)));
