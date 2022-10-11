@@ -26,9 +26,6 @@ const typesToRus = {
   hotel: 'Отель'
 };
 
-const adsContainerElement = document.querySelector(QuerySelector.ADS_CONTAINER);
-const adTemplateElement = document.querySelector(QuerySelector.ADS_TEMPLATE).content.querySelector(QuerySelector.AD);
-
 const addPhotos = (urls, container) => {
   if (!urls) {
     hideElement(container);
@@ -66,40 +63,46 @@ const addFeatures = (data, container) => {
   });
 };
 
-const generateSimilarAdvertismentsFragment = (adData) => {
+const createAdElement = (data) => {
+  const adTemplateElement = document.querySelector(QuerySelector.ADS_TEMPLATE).content.querySelector(QuerySelector.AD);
+  const adElement = adTemplateElement.cloneNode(true);
+  const titleElement = adElement.querySelector(QuerySelector.TITLE);
+  const avatarElement = adElement.querySelector(QuerySelector.AVATAR);
+  const addressElement = adElement.querySelector(QuerySelector.ADDRESS);
+  const priceElement = adElement.querySelector(QuerySelector.PRICE);
+  const typeElement = adElement.querySelector(QuerySelector.TYPE);
+  const capasityElement = adElement.querySelector(QuerySelector.CAPASITY);
+  const timeElement = adElement.querySelector(QuerySelector.TIME);
+  const featuresContainerElement = adElement.querySelector(QuerySelector.FEATURE_CONTAINER);
+  const descriptionElement = adElement.querySelector(QuerySelector.DESCRIPTION);
+  const photosContainerElement = adElement.querySelector(QuerySelector.PHOTO_CONTAINER);
+
+  avatarElement.src = data.author.avatar || hideElement(avatarElement);
+  titleElement.textContent = data.offer.title || hideElement(titleElement);
+  addressElement.textContent = data.offer.address || hideElement(addressElement);
+  priceElement.textContent = `${data.offer.price || hideElement(priceElement)} ₽/ночь`;
+  typeElement.textContent = typesToRus[data.offer.type] || hideElement(typeElement);
+  capasityElement.textContent = `${data.offer.rooms || hideElement(capasityElement)} комнаты для ${data.offer.guests || hideElement(capasityElement)} гостей`;
+  timeElement.textContent = `Заезд после ${data.offer.checkin || hideElement(timeElement)}, выезд до ${data.offer.checkout || hideElement(timeElement)}`;
+  descriptionElement.textContent = data.offer.description || hideElement(descriptionElement);
+
+  addPhotos(data.offer.photos, photosContainerElement);
+  addFeatures(data.offer.features, featuresContainerElement);
+
+  return adElement;
+};
+
+const generateSimilarAdvertismentsFragment = (data) => {
   const fragment = document.createDocumentFragment();
 
-  adData.forEach((data) => {
-    const adElement = adTemplateElement.cloneNode(true);
-    const titleElement = adElement.querySelector(QuerySelector.TITLE);
-    const avatarElement = adElement.querySelector(QuerySelector.AVATAR);
-    const addressElement = adElement.querySelector(QuerySelector.ADDRESS);
-    const priceElement = adElement.querySelector(QuerySelector.PRICE);
-    const typeElement = adElement.querySelector(QuerySelector.TYPE);
-    const capasityElement = adElement.querySelector(QuerySelector.CAPASITY);
-    const timeElement = adElement.querySelector(QuerySelector.TIME);
-    const featuresContainerElement = adElement.querySelector(QuerySelector.FEATURE_CONTAINER);
-    const descriptionElement = adElement.querySelector(QuerySelector.DESCRIPTION);
-    const photosContainerElement = adElement.querySelector(QuerySelector.PHOTO_CONTAINER);
-
-    avatarElement.src = data.author.avatar || hideElement(avatarElement);
-    titleElement.textContent = data.offer.title || hideElement(titleElement);
-    addressElement.textContent = data.offer.address || hideElement(addressElement);
-    priceElement.textContent = `${data.offer.price || hideElement(priceElement)} ₽/ночь`;
-    typeElement.textContent = typesToRus[data.offer.type] || hideElement(typeElement);
-    capasityElement.textContent = `${data.offer.rooms || hideElement(capasityElement)} комнаты для ${data.offer.guests || hideElement(capasityElement)} гостей`;
-    timeElement.textContent = `Заезд после ${data.offer.checkin || hideElement(timeElement)}, выезд до ${data.offer.checkout || hideElement(timeElement)}`;
-    descriptionElement.textContent = data.offer.description || hideElement(descriptionElement);
-
-    addPhotos(data.offer.photos, photosContainerElement);
-    addFeatures(data.offer.features, featuresContainerElement);
-
-    fragment.append(adElement);
-  });
+  data.forEach((dataElement) => fragment.append(createAdElement(dataElement)));
 
   return fragment;
 };
 
-const renderAdvertisements = (count) => adsContainerElement.append(generateSimilarAdvertismentsFragment(generateData(count)));
+const renderAdvertisements = (count) => {
+  const adsContainerElement = document.querySelector(QuerySelector.ADS_CONTAINER);
+  adsContainerElement.append(generateSimilarAdvertismentsFragment(generateData(count)));
+};
 
 export { renderAdvertisements };
