@@ -49,7 +49,7 @@ const generateSimilarAdvertismentsFragment = (adData) => {
     avatarElement.src = data.author.avatar || hideElement(avatarElement);
     titleElement.textContent = data.offer.title || hideElement(titleElement);
     addressElement.textContent = data.offer.address || hideElement(addressElement);
-    priceElement.textContent = `${data.offer.price} ₽/ночь` || hideElement(priceElement);
+    priceElement.textContent = `${data.offer.price || hideElement(priceElement)} ₽/ночь`;
     typeElement.textContent = typesMap[data.offer.type] || hideElement(typeElement);
     capasityElement.textContent = `${data.offer.rooms || hideElement(capasityElement)} комнаты для ${data.offer.guests || hideElement(capasityElement)} гостей`;
     timeElement.textContent = `Заезд после ${data.offer.checkin || hideElement(timeElement)}, выезд до ${data.offer.checkout || hideElement(timeElement)}`;
