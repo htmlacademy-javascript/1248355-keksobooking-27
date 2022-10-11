@@ -1,1 +1,3 @@
-import './render-advertisements.js';
+import { renderAdvertisements } from './render-advertisements.js';
+
+renderAdvertisements(1);

@@ -94,4 +94,6 @@ const generateSimilarAdvertismentsFragment = (adData) => {
   return fragment;
 };
 
-adsContainerElement.append(generateSimilarAdvertismentsFragment(generateData(1)));
+const renderAdvertisements = (count) => adsContainerElement.append(generateSimilarAdvertismentsFragment(generateData(count)));
+
+export { renderAdvertisements };
