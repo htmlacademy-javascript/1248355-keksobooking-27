@@ -1,5 +1,5 @@
 import { generateData } from './mock-data.js';
-import { hideElement } from './util.js';
+import { toggleClassHidden } from './util.js';
 
 const QuerySelector = {
   ADS_CONTAINER: '.map__canvas',
@@ -28,7 +28,7 @@ const typeToRus = {
 
 const addPhotos = (urls, container) => {
   if (!urls) {
-    hideElement(container);
+    toggleClassHidden(container);
     return;
   }
 
@@ -46,7 +46,7 @@ const addPhotos = (urls, container) => {
 
 const addFeatures = (data, container) => {
   if (!data) {
-    hideElement(container);
+    toggleClassHidden(container);
     return;
   }
 
@@ -77,14 +77,14 @@ const createAdElement = (data) => {
   const descriptionElement = adElement.querySelector(QuerySelector.DESCRIPTION);
   const photosContainerElement = adElement.querySelector(QuerySelector.PHOTO_CONTAINER);
 
-  avatarElement.src = data.author.avatar || hideElement(avatarElement);
-  titleElement.textContent = data.offer.title || hideElement(titleElement);
-  addressElement.textContent = data.offer.address || hideElement(addressElement);
-  priceElement.textContent = `${data.offer.price || hideElement(priceElement)} ₽/ночь`;
-  typeElement.textContent = typeToRus[data.offer.type] || hideElement(typeElement);
-  capasityElement.textContent = `${data.offer.rooms || hideElement(capasityElement)} комнаты для ${data.offer.guests || hideElement(capasityElement)} гостей`;
-  timeElement.textContent = `Заезд после ${data.offer.checkin || hideElement(timeElement)}, выезд до ${data.offer.checkout || hideElement(timeElement)}`;
-  descriptionElement.textContent = data.offer.description || hideElement(descriptionElement);
+  avatarElement.src = data.author.avatar || toggleClassHidden(avatarElement);
+  titleElement.textContent = data.offer.title || toggleClassHidden(titleElement);
+  addressElement.textContent = data.offer.address || toggleClassHidden(addressElement);
+  priceElement.textContent = `${data.offer.price || toggleClassHidden(priceElement)} ₽/ночь`;
+  typeElement.textContent = typeToRus[data.offer.type] || toggleClassHidden(typeElement);
+  capasityElement.textContent = `${data.offer.rooms || toggleClassHidden(capasityElement)} комнаты для ${data.offer.guests || toggleClassHidden(capasityElement)} гостей`;
+  timeElement.textContent = `Заезд после ${data.offer.checkin || toggleClassHidden(timeElement)}, выезд до ${data.offer.checkout || toggleClassHidden(timeElement)}`;
+  descriptionElement.textContent = data.offer.description || toggleClassHidden(descriptionElement);
 
   addPhotos(data.offer.photos, photosContainerElement);
   addFeatures(data.offer.features, featuresContainerElement);
