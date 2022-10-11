@@ -13,12 +13,12 @@ const QuerySelector = {
   CAPASITY: '.popup__text--capacity',
   TIME: '.popup__text--time',
   FEATURE: '.popup__feature',
-  FEATURES: '.popup__features',
+  FEATURE_CONTAINER: '.popup__features',
   DESCRIPTION: '.popup__description',
-  PHOTOS: '.popup__photos',
+  PHOTO_CONTAINER: '.popup__photos',
   PHOTO: '.popup__photo',
 };
-const typesMap = {
+const typesToRus = {
   flat: 'Квартира',
   bungalow: 'Бунгало',
   house: 'Дом',
@@ -46,7 +46,6 @@ const addPhotos = (urls, container) => {
     container.append(photoElement);
   });
 };
-
 
 const addFeatures = (data, container) => {
   if (!data) {
@@ -79,15 +78,15 @@ const generateSimilarAdvertismentsFragment = (adData) => {
     const typeElement = adElement.querySelector(QuerySelector.TYPE);
     const capasityElement = adElement.querySelector(QuerySelector.CAPASITY);
     const timeElement = adElement.querySelector(QuerySelector.TIME);
-    const featuresContainerElement = adElement.querySelector(QuerySelector.FEATURES);
+    const featuresContainerElement = adElement.querySelector(QuerySelector.FEATURE_CONTAINER);
     const descriptionElement = adElement.querySelector(QuerySelector.DESCRIPTION);
-    const photosContainerElement = adElement.querySelector(QuerySelector.PHOTOS);
+    const photosContainerElement = adElement.querySelector(QuerySelector.PHOTO_CONTAINER);
 
     avatarElement.src = data.author.avatar || hideElement(avatarElement);
     titleElement.textContent = data.offer.title || hideElement(titleElement);
     addressElement.textContent = data.offer.address || hideElement(addressElement);
     priceElement.textContent = `${data.offer.price || hideElement(priceElement)} ₽/ночь`;
-    typeElement.textContent = typesMap[data.offer.type] || hideElement(typeElement);
+    typeElement.textContent = typesToRus[data.offer.type] || hideElement(typeElement);
     capasityElement.textContent = `${data.offer.rooms || hideElement(capasityElement)} комнаты для ${data.offer.guests || hideElement(capasityElement)} гостей`;
     timeElement.textContent = `Заезд после ${data.offer.checkin || hideElement(timeElement)}, выезд до ${data.offer.checkout || hideElement(timeElement)}`;
     descriptionElement.textContent = data.offer.description || hideElement(descriptionElement);
