@@ -18,7 +18,7 @@ const QuerySelector = {
   PHOTO_CONTAINER: '.popup__photos',
   PHOTO: '.popup__photo',
 };
-const typesToRus = {
+const typeToRus = {
   flat: 'Квартира',
   bungalow: 'Бунгало',
   house: 'Дом',
@@ -81,7 +81,7 @@ const createAdElement = (data) => {
   titleElement.textContent = data.offer.title || hideElement(titleElement);
   addressElement.textContent = data.offer.address || hideElement(addressElement);
   priceElement.textContent = `${data.offer.price || hideElement(priceElement)} ₽/ночь`;
-  typeElement.textContent = typesToRus[data.offer.type] || hideElement(typeElement);
+  typeElement.textContent = typeToRus[data.offer.type] || hideElement(typeElement);
   capasityElement.textContent = `${data.offer.rooms || hideElement(capasityElement)} комнаты для ${data.offer.guests || hideElement(capasityElement)} гостей`;
   timeElement.textContent = `Заезд после ${data.offer.checkin || hideElement(timeElement)}, выезд до ${data.offer.checkout || hideElement(timeElement)}`;
   descriptionElement.textContent = data.offer.description || hideElement(descriptionElement);
