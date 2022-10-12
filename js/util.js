@@ -28,4 +28,6 @@ const createRandomElementsArray = (elements, isRandomLength = true) => {
   return arrCopy.slice(0, arrLength);
 };
 
-export { getRandomArrayElement, createRandomElementsArray, getRandomDecimal, getRandomNumber };
+const toggleClassHidden = (element) => element.classList.toggle('hidden');
+
+export { getRandomArrayElement, createRandomElementsArray, getRandomDecimal, getRandomNumber, toggleClassHidden};

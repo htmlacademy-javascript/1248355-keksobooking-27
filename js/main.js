@@ -1,5 +1,3 @@
-import { generateAdvertisements } from './generate-advertisements.js';
+import { renderAdvertisements } from './render-advertisements.js';
 
-const advertisements = generateAdvertisements();
-
-window.advertisements = advertisements;
+renderAdvertisements(1);
