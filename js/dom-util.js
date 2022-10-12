@@ -15,9 +15,10 @@ const QuerySelector = {
   PHOTO_CONTAINER: '.popup__photos',
   PHOTO: '.popup__photo',
   AD_FORM: '.ad-form',
-  MAP_FILTERS: '.map__filters'
+  MAP_FORM: '.map__filters',
+  MAP_FILTER: '.map__filter',
+  MAP_FEATURES: '.map__features'
 };
-
 const ClassModifier = {
   HIDDEN: 'hidden',
   DISABLED: 'disabled'
@@ -29,9 +30,8 @@ const createClassName = (querySelector, modifer) => modifer
   ? `${querySelector}--${modifer}`.slice(1)
   : `${querySelector}`.slice(1);
 
-export {
-  toggleClass,
-  createClassName,
-  ClassModifier,
-  QuerySelector
-};
+const toggleDisabledState = (elements) => elements.forEach((element) => {
+  element.disabled = !element.disabled;
+});
+
+export { toggleClass, createClassName, toggleDisabledState, ClassModifier, QuerySelector };

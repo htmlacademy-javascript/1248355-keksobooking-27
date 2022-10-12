@@ -1,3 +1,5 @@
-import { renderAdvertisements } from './render-advertisements.js';
+import { toggleFormsDisebledState } from './form.js';
 
-renderAdvertisements(1);
+window.addEventListener('DOMContentLoaded', () => toggleFormsDisebledState());
+
+setTimeout(toggleFormsDisebledState, 5000);
