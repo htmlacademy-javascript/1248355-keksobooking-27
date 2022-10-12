@@ -14,12 +14,24 @@ const QuerySelector = {
   DESCRIPTION: '.popup__description',
   PHOTO_CONTAINER: '.popup__photos',
   PHOTO: '.popup__photo',
+  AD_FORM: '.ad-form',
+  MAP_FILTERS: '.map__filters'
 };
 
-const toggleClassHidden = (element) => element.classList.toggle('hidden');
+const ClassModifier = {
+  HIDDEN: 'hidden',
+  DISABLED: 'disabled'
+};
 
+const toggleClass = (element, className) => element.classList.toggle(className);
+
+const createClassName = (querySelector, modifer) => modifer
+  ? `${querySelector}--${modifer}`.slice(1)
+  : `${querySelector}`.slice(1);
 
 export {
-  toggleClassHidden,
+  toggleClass,
+  createClassName,
+  ClassModifier,
   QuerySelector
 };
