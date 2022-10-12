@@ -1,5 +1,5 @@
 import { generateData } from './mock-data.js';
-import { toggleClassHidden, QuerySelector } from './dom-util.js';
+import { toggleClass, QuerySelector, ClassModifier, createClassName } from './dom-util.js';
 
 const typeToRus = {
   flat: 'Квартира',
@@ -11,7 +11,7 @@ const typeToRus = {
 
 const addPhotos = (urls, container) => {
   if (!urls) {
-    toggleClassHidden(container);
+    toggleClass(container, ClassModifier.HIDDEN);
     return;
   }
 
@@ -29,14 +29,14 @@ const addPhotos = (urls, container) => {
 
 const addFeatures = (data, container) => {
   if (!data) {
-    toggleClassHidden(container);
+    toggleClass(container, ClassModifier.HIDDEN);
     return;
   }
 
   const featureElements = container.querySelectorAll(QuerySelector.FEATURE);
   featureElements.forEach((featureElement) => {
     const isFeatureElement = data.some((dataElement) => {
-      const modifer = `${QuerySelector.FEATURE}--${dataElement}`.slice(1);
+      const modifer = createClassName(QuerySelector.FEATURE, dataElement);
       return featureElement.classList.contains(modifer);
     });
 
@@ -60,14 +60,21 @@ const createAdElement = (data) => {
   const descriptionElement = adElement.querySelector(QuerySelector.DESCRIPTION);
   const photosContainerElement = adElement.querySelector(QuerySelector.PHOTO_CONTAINER);
 
-  avatarElement.src = data.author.avatar || toggleClassHidden(avatarElement);
-  titleElement.textContent = data.offer.title || toggleClassHidden(titleElement);
-  addressElement.textContent = data.offer.address || toggleClassHidden(addressElement);
-  priceElement.textContent = `${data.offer.price || toggleClassHidden(priceElement)} ₽/ночь`;
-  typeElement.textContent = typeToRus[data.offer.type] || toggleClassHidden(typeElement);
-  capasityElement.textContent = `${data.offer.rooms || toggleClassHidden(capasityElement)} комнаты для ${data.offer.guests || toggleClassHidden(capasityElement)} гостей`;
-  timeElement.textContent = `Заезд после ${data.offer.checkin || toggleClassHidden(timeElement)}, выезд до ${data.offer.checkout || toggleClassHidden(timeElement)}`;
-  descriptionElement.textContent = data.offer.description || toggleClassHidden(descriptionElement);
+  avatarElement.src = data.author.avatar || toggleClass(avatarElement, ClassModifier.HIDDEN);
+  titleElement.textContent = data.offer.title || toggleClass(titleElement, ClassModifier.HIDDEN);
+  addressElement.textContent = data.offer.address || toggleClass(addressElement, ClassModifier.HIDDEN);
+  priceElement.textContent = `${data.offer.price || toggleClass(priceElement, ClassModifier.HIDDEN)} ₽/ночь`;
+  typeElement.textContent = typeToRus[data.offer.type] || toggleClass(typeElement, ClassModifier.HIDDEN);
+  descriptionElement.textContent = data.offer.description || toggleClass(descriptionElement, ClassModifier.HIDDEN);
+
+  capasityElement.textContent = data.offer.rooms && data.offer.guests
+    ? `${data.offer.rooms} комнаты для ${data.offer.guests} гостей`
+    : toggleClass(capasityElement, ClassModifier.HIDDEN);
+
+  timeElement.textContent = data.offer.checkin && data.offer.checkout
+    ? `Заезд после ${data.offer.checkin}, выезд до ${data.offer.checkout}`
+    : toggleClass(timeElement, ClassModifier.HIDDEN);
+
 
   addPhotos(data.offer.photos, photosContainerElement);
   addFeatures(data.offer.features, featuresContainerElement);
