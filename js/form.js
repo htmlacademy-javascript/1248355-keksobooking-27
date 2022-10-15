@@ -1,17 +1,17 @@
 import { QuerySelector, ClassModifier, createClassName, toggleClass, toggleDisabledState } from './dom-util.js';
 
 const toggleFormsDisebledState = () => {
-  const adForm = document.querySelector(QuerySelector.AD_FORM);
-  const adFormfieldsets = adForm.querySelectorAll('fieldset');
-  const mapForm = document.querySelector(QuerySelector.MAP_FORM);
-  const mapFormElements = mapForm.querySelectorAll(QuerySelector.MAP_FILTER);
-  const mapFormfieldsets = mapForm.querySelectorAll('fieldset');
+  const adForm = document.querySelector(QuerySelector.CLASS_NAME.AD_FORM);
+  const adFormfieldsets = adForm.querySelectorAll(QuerySelector.TAG_NAME.FIELDSET);
+  const mapForm = document.querySelector(QuerySelector.CLASS_NAME.MAP_FORM);
+  const mapFormElements = mapForm.querySelectorAll(QuerySelector.CLASS_NAME.MAP_FILTER);
+  const mapFormfieldsets = mapForm.querySelectorAll(QuerySelector.TAG_NAME.FIELDSET);
 
   toggleDisabledState(adFormfieldsets);
   toggleDisabledState(mapFormElements);
   toggleDisabledState(mapFormfieldsets);
-  toggleClass(adForm, createClassName(QuerySelector.AD_FORM, ClassModifier.DISABLED));
-  toggleClass(mapForm, createClassName(QuerySelector.MAP_FORM, ClassModifier.DISABLED));
+  toggleClass(adForm, createClassName(QuerySelector.CLASS_NAME.AD_FORM, ClassModifier.DISABLED));
+  toggleClass(mapForm, createClassName(QuerySelector.CLASS_NAME.MAP_FORM, ClassModifier.DISABLED));
 };
 
 export { toggleFormsDisebledState };
