@@ -34,7 +34,7 @@ const adFormValidatorData = {
       return +value && +value <= this.maxPrice;
     },
     messageHandler: function (value) {
-      if (!value) {
+      if (!+value) {
         return getRequiredMessage();
       }
 
@@ -48,7 +48,7 @@ const adFormValidatorData = {
     },
     messageHandler: function (value) {
       if (!value) {
-        this.element.value = 'lat:35.70606, lng:139.75654';
+        this.element.value = 'lat:35.70606, lng:139.75654'; // координаты по умолчанию, заменить на центр Токио
         return 'Задайте координаты с помощью ползунка';
       }
     },
@@ -76,7 +76,6 @@ const adFormValidatorData = {
       // Оcтальные случаи
       return +value >= +this.connectedElement.value;
     },
-
     messageHandler: function (value) {
       return `${this.roomToMessage[value]}`;
     },
@@ -93,6 +92,6 @@ const createPristine = (validatorData, form, config) => {
   return pristine;
 };
 
-const adFormPrestine = createPristine(adFormValidatorData, adForm, adFormConfig);
+const adFormPristine = createPristine(adFormValidatorData, adForm, adFormConfig);
 
-export { adFormPrestine };
+export { adFormPristine };

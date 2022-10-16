@@ -1,6 +1,9 @@
 import { generateData } from './mock-data.js';
 import { toggleClass, QuerySelector, ClassModifier, createClassName } from './dom-util.js';
 
+const adTemplateElement = document.querySelector(QuerySelector.CLASS_NAME.ADS_TEMPLATE).content.querySelector(QuerySelector.CLASS_NAME.AD);
+const adsContainerElement = document.querySelector(QuerySelector.CLASS_NAME.ADS_CONTAINER);
+
 const typeToRus = {
   flat: 'Квартира',
   bungalow: 'Бунгало',
@@ -47,7 +50,6 @@ const addFeatures = (data, container) => {
 };
 
 const createAdElement = (data) => {
-  const adTemplateElement = document.querySelector(QuerySelector.CLASS_NAME.ADS_TEMPLATE).content.querySelector(QuerySelector.CLASS_NAME.AD);
   const adElement = adTemplateElement.cloneNode(true);
   const titleElement = adElement.querySelector(QuerySelector.CLASS_NAME.TITLE);
   const avatarElement = adElement.querySelector(QuerySelector.CLASS_NAME.AVATAR);
@@ -90,9 +92,6 @@ const generateSimilarAdvertismentsFragment = (data) => {
   return fragment;
 };
 
-const renderAdvertisements = (count) => {
-  const adsContainerElement = document.querySelector(QuerySelector.CLASS_NAME.ADS_CONTAINER);
-  adsContainerElement.append(generateSimilarAdvertismentsFragment(generateData(count)));
-};
+const renderAdvertisements = (count) => adsContainerElement.append(generateSimilarAdvertismentsFragment(generateData(count)));
 
 export { renderAdvertisements };
