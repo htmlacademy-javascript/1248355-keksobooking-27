@@ -24,7 +24,11 @@ const QuerySelector = {
     FIELDSET: 'fieldset'
   },
   ID: {
-    TITLE: '#title'
+    TITLE: '#title',
+    PRICE: '#price',
+    ADDRESS: '#address',
+    ROOM_NUMBER: '#room_number',
+    CAPASITY:'#capacity'
   }
 };
 const ClassModifier = {
@@ -42,4 +46,4 @@ const toggleDisabledState = (elements) => elements.forEach((element) => {
   element.disabled = !element.disabled;
 });
 
-export { toggleClass, createClassName, toggleDisabledState, ClassModifier, QuerySelector};
+export { toggleClass, createClassName, toggleDisabledState, ClassModifier, QuerySelector };
