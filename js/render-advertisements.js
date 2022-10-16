@@ -1,6 +1,9 @@
 import { generateData } from './mock-data.js';
 import { toggleClass, QuerySelector, ClassModifier, createClassName } from './dom-util.js';
 
+const adTemplateElement = document.querySelector(QuerySelector.CLASS_NAME.ADS_TEMPLATE).content.querySelector(QuerySelector.CLASS_NAME.AD);
+const adsContainerElement = document.querySelector(QuerySelector.CLASS_NAME.ADS_CONTAINER);
+
 const typeToRus = {
   flat: 'Квартира',
   bungalow: 'Бунгало',
@@ -16,7 +19,7 @@ const addPhotos = (urls, container) => {
   }
 
   urls.forEach((url, index) => {
-    const photoElement = container.querySelector(QuerySelector.PHOTO).cloneNode(true);
+    const photoElement = container.querySelector(QuerySelector.CLASS_NAME.PHOTO).cloneNode(true);
     photoElement.src = url;
 
     if (index === 0) {
@@ -33,10 +36,10 @@ const addFeatures = (data, container) => {
     return;
   }
 
-  const featureElements = container.querySelectorAll(QuerySelector.FEATURE);
+  const featureElements = container.querySelectorAll(QuerySelector.CLASS_NAME.FEATURE);
   featureElements.forEach((featureElement) => {
     const isFeatureElement = data.some((dataElement) => {
-      const modifer = createClassName(QuerySelector.FEATURE, dataElement);
+      const modifer = createClassName(QuerySelector.CLASS_NAME.FEATURE, dataElement);
       return featureElement.classList.contains(modifer);
     });
 
@@ -47,18 +50,17 @@ const addFeatures = (data, container) => {
 };
 
 const createAdElement = (data) => {
-  const adTemplateElement = document.querySelector(QuerySelector.ADS_TEMPLATE).content.querySelector(QuerySelector.AD);
   const adElement = adTemplateElement.cloneNode(true);
-  const titleElement = adElement.querySelector(QuerySelector.TITLE);
-  const avatarElement = adElement.querySelector(QuerySelector.AVATAR);
-  const addressElement = adElement.querySelector(QuerySelector.ADDRESS);
-  const priceElement = adElement.querySelector(QuerySelector.PRICE);
-  const typeElement = adElement.querySelector(QuerySelector.TYPE);
-  const capasityElement = adElement.querySelector(QuerySelector.CAPASITY);
-  const timeElement = adElement.querySelector(QuerySelector.TIME);
-  const featuresContainerElement = adElement.querySelector(QuerySelector.FEATURE_CONTAINER);
-  const descriptionElement = adElement.querySelector(QuerySelector.DESCRIPTION);
-  const photosContainerElement = adElement.querySelector(QuerySelector.PHOTO_CONTAINER);
+  const titleElement = adElement.querySelector(QuerySelector.CLASS_NAME.TITLE);
+  const avatarElement = adElement.querySelector(QuerySelector.CLASS_NAME.AVATAR);
+  const addressElement = adElement.querySelector(QuerySelector.CLASS_NAME.ADDRESS);
+  const priceElement = adElement.querySelector(QuerySelector.CLASS_NAME.PRICE);
+  const typeElement = adElement.querySelector(QuerySelector.CLASS_NAME.TYPE);
+  const capasityElement = adElement.querySelector(QuerySelector.CLASS_NAME.CAPASITY);
+  const timeElement = adElement.querySelector(QuerySelector.CLASS_NAME.TIME);
+  const featuresContainerElement = adElement.querySelector(QuerySelector.CLASS_NAME.FEATURE_CONTAINER);
+  const descriptionElement = adElement.querySelector(QuerySelector.CLASS_NAME.DESCRIPTION);
+  const photosContainerElement = adElement.querySelector(QuerySelector.CLASS_NAME.PHOTO_CONTAINER);
 
   avatarElement.src = data.author.avatar || toggleClass(avatarElement, ClassModifier.HIDDEN);
   titleElement.textContent = data.offer.title || toggleClass(titleElement, ClassModifier.HIDDEN);
@@ -90,9 +92,6 @@ const generateSimilarAdvertismentsFragment = (data) => {
   return fragment;
 };
 
-const renderAdvertisements = (count) => {
-  const adsContainerElement = document.querySelector(QuerySelector.ADS_CONTAINER);
-  adsContainerElement.append(generateSimilarAdvertismentsFragment(generateData(count)));
-};
+const renderAdvertisements = (count) => adsContainerElement.append(generateSimilarAdvertismentsFragment(generateData(count)));
 
 export { renderAdvertisements };
