@@ -30,17 +30,18 @@ const addPhotos = (urls, container) => {
   });
 };
 
-const addFeatures = (data, container) => {
-  if (!data) {
+const addFeatures = (modifiers, container) => {
+  if (!modifiers) {
     toggleClass(container, ClassModifier.HIDDEN);
     return;
   }
 
   const featureElements = container.querySelectorAll(QuerySelector.CLASS_NAME.FEATURE);
+
   featureElements.forEach((featureElement) => {
-    const isFeatureElement = data.some((dataElement) => {
-      const modifer = createClassName(QuerySelector.CLASS_NAME.FEATURE, dataElement);
-      return featureElement.classList.contains(modifer);
+    const isFeatureElement = modifiers.some((modifier) => {
+      const className = createClassName(QuerySelector.CLASS_NAME.FEATURE, modifier);
+      return featureElement.classList.contains(className);
     });
 
     if (!isFeatureElement) {
