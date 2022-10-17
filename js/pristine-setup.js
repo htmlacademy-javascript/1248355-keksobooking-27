@@ -1,6 +1,6 @@
 import { QuerySelector } from './dom-util.js';
 
-const adForm = document.querySelector(QuerySelector.CLASS_NAME.AD_FORM);
+const adFormElement = document.querySelector(QuerySelector.CLASS_NAME.AD_FORM);
 
 const adFormConfig = {
   classTo: 'ad-form__element',
@@ -15,7 +15,7 @@ const adFormValidatorData = {
   titleField: {
     minLength: 30,
     maxLength: 100,
-    element: adForm.querySelector(QuerySelector.ID.TITLE),
+    element: adFormElement.querySelector(QuerySelector.ID.TITLE),
     validator: function (value) {
       return value.trim() && this.minLength <= value.length && value.length <= this.maxLength;
     },
@@ -28,23 +28,26 @@ const adFormValidatorData = {
     },
   },
   priceField: {
+    minPrice: 0,
     maxPrice: 100000,
-    element: adForm.querySelector(QuerySelector.ID.PRICE),
+    element: adFormElement.querySelector(QuerySelector.ID.PRICE),
+    connectedElement: adFormElement.querySelector(QuerySelector.ID.TYPE),
     validator: function (value) {
-      return +value && +value <= this.maxPrice;
+      this.minPrice = +this.element.placeholder;
+      return value && this.minPrice <= +this.element.value && +this.element.value <= this.maxPrice;
     },
     messageHandler: function (value) {
-      if (!+value) {
+      if (!value) {
         return getRequiredMessage();
       }
 
-      return `Максимальная стоимость ${this.maxPrice} р`;
+      return `Введите цену от ${this.minPrice} до ${this.maxPrice} руб`;
     },
   },
   addressField: {
-    element: adForm.querySelector(QuerySelector.ID.ADDRESS),
+    element: adFormElement.querySelector(QuerySelector.ID.ADDRESS),
     validator: function (value) {
-      return Boolean(value);
+      return !!value;
     },
     messageHandler: function (value) {
       if (!value) {
@@ -54,8 +57,8 @@ const adFormValidatorData = {
     },
   },
   roomNumberField: {
-    element: adForm.querySelector(QuerySelector.ID.ROOM_NUMBER),
-    connectedElement: adForm.querySelector(QuerySelector.ID.CAPASITY),
+    element: adFormElement.querySelector(QuerySelector.ID.ROOM_NUMBER),
+    connectedElement: adFormElement.querySelector(QuerySelector.ID.CAPASITY),
     roomToMessage: {
       1: '«для 1 гостя»',
       2: '«для 2 гостей» или «для 1 гостя»',
@@ -79,7 +82,7 @@ const adFormValidatorData = {
     messageHandler: function (value) {
       return `${this.roomToMessage[value]}`;
     },
-  }
+  },
 };
 
 const createPristine = (validatorData, form, config) => {
@@ -92,6 +95,6 @@ const createPristine = (validatorData, form, config) => {
   return pristine;
 };
 
-const adFormPristine = createPristine(adFormValidatorData, adForm, adFormConfig);
+const adFormPristine = createPristine(adFormValidatorData, adFormElement, adFormConfig);
 
 export { adFormPristine };

@@ -18,7 +18,8 @@ const QuerySelector = {
     AD_FORM: '.ad-form',
     MAP_FORM: '.map__filters',
     MAP_FILTER: '.map__filter',
-    MAP_FEATURES: '.map__features'
+    MAP_FEATURES: '.map__features',
+    CHECK_TIME_CONTAINER: '.ad-form__element--time'
   },
   TAG_NAME: {
     FIELDSET: 'fieldset'
@@ -28,7 +29,10 @@ const QuerySelector = {
     PRICE: '#price',
     ADDRESS: '#address',
     ROOM_NUMBER: '#room_number',
-    CAPASITY:'#capacity'
+    CAPASITY: '#capacity',
+    TYPE: '#type',
+    TIMEIN: '#timein',
+    TIMEOUT: '#timeout'
   }
 };
 const ClassModifier = {
