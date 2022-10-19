@@ -19,7 +19,8 @@ const QuerySelector = {
     MAP_FORM: '.map__filters',
     MAP_FILTER: '.map__filter',
     MAP_FEATURES: '.map__features',
-    CHECK_TIME_CONTAINER: '.ad-form__element--time'
+    CHECK_TIME_CONTAINER: '.ad-form__element--time',
+    SLIDER: '.ad-form__slider'
   },
   TAG_NAME: {
     FIELDSET: 'fieldset'
