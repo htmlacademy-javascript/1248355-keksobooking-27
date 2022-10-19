@@ -28,8 +28,8 @@ const addPhotos = (urls, container) => {
   });
 };
 
-const addFeatures = (modifiers, container) => {
-  if (!modifiers) {
+const filterFeatures = (filters, container) => {
+  if (!filters) {
     toggleClass(container, ClassModifier.HIDDEN);
     return;
   }
@@ -37,8 +37,8 @@ const addFeatures = (modifiers, container) => {
   const featureElements = container.querySelectorAll(QuerySelector.CLASS_NAME.FEATURE);
 
   featureElements.forEach((featureElement) => {
-    const isFeatureElement = modifiers.some((modifier) => {
-      const className = createClassName(QuerySelector.CLASS_NAME.FEATURE, modifier);
+    const isFeatureElement = filters.some((filter) => {
+      const className = createClassName(QuerySelector.CLASS_NAME.FEATURE, filter);
       return featureElement.classList.contains(className);
     });
 
@@ -78,7 +78,7 @@ const createAdElement = (data) => {
 
 
   addPhotos(data.offer.photos, photosContainerElement);
-  addFeatures(data.offer.features, featuresContainerElement);
+  filterFeatures(data.offer.features, featuresContainerElement);
 
   return adElement;
 };

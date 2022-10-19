@@ -1,20 +1,19 @@
 import { QuerySelector, ClassModifier, createClassName, toggleClass, toggleDisabledState } from './dom-util.js';
 import { adFormPristine } from './pristine-setup.js';
+import { updateSlider } from './slider.js';
 
 const adFormElement = document.querySelector(QuerySelector.CLASS_NAME.AD_FORM);
 const capacityELement = adFormElement.querySelector(QuerySelector.ID.CAPASITY);
 const roomNumberElement = adFormElement.querySelector(QuerySelector.ID.ROOM_NUMBER);
-const typeFieldElement = adFormElement.querySelector(QuerySelector.ID.TYPE);
-const priceFieldElement = adFormElement.querySelector(QuerySelector.ID.PRICE);
-const sliderElement = adFormElement.querySelector(QuerySelector.CLASS_NAME.SLIDER);
-const timeinFieldElement = adFormElement.querySelector(QuerySelector.ID.TIMEIN);
-const timeoutFieldElement = adFormElement.querySelector(QuerySelector.ID.TIMEOUT);
+const typeInputElement = adFormElement.querySelector(QuerySelector.ID.TYPE);
+const priceInputElement = adFormElement.querySelector(QuerySelector.ID.PRICE);
+const timeinInputElement = adFormElement.querySelector(QuerySelector.ID.TIMEIN);
+const timeoutInputElement = adFormElement.querySelector(QuerySelector.ID.TIMEOUT);
 const checkTimeContainerElement = adFormElement.querySelector(QuerySelector.CLASS_NAME.CHECK_TIME_CONTAINER);
 const adFormsfieldsetElements = adFormElement.querySelectorAll(QuerySelector.TAG_NAME.FIELDSET);
 const mapFormElement = document.querySelector(QuerySelector.CLASS_NAME.MAP_FORM);
 const mapFormsElements = mapFormElement.querySelectorAll(QuerySelector.CLASS_NAME.MAP_FILTER);
 const mapFormsFieldsetElements = mapFormElement.querySelectorAll(QuerySelector.TAG_NAME.FIELDSET);
-let wasSliderDragged;
 
 const typeToMinPrice = {
   flat: '1000',
@@ -24,23 +23,9 @@ const typeToMinPrice = {
   hotel: '3000'
 };
 const idToElement = {
-  'timein': timeoutFieldElement,
-  'timeout': timeinFieldElement
+  'timein': timeoutInputElement,
+  'timeout': timeinInputElement
 };
-
-noUiSlider.create(sliderElement, {
-  range: {
-    min: 0,
-    max: 100000
-  },
-  connect: 'lower',
-  start: 0,
-  step: 1,
-  format: {
-    to: (value) => value.toFixed(),
-    from: (value) => +value
-  }
-});
 
 const toggleFormsDisebledState = () => {
   toggleDisabledState(adFormsfieldsetElements);
@@ -51,72 +36,41 @@ const toggleFormsDisebledState = () => {
 };
 
 const updatePriceFieldAttributes = () => {
-  priceFieldElement.placeholder = typeToMinPrice[typeFieldElement.value];
-  priceFieldElement.min = typeToMinPrice[typeFieldElement.value];
+  priceInputElement.placeholder = typeToMinPrice[typeInputElement.value];
+  priceInputElement.min = typeToMinPrice[typeInputElement.value];
 
-  if (priceFieldElement.value) {
-    adFormPristine.validate(priceFieldElement);
+  if (priceInputElement.value) {
+    adFormPristine.validate(priceInputElement);
   }
 };
 
-const updateSlider = () => {
-  sliderElement.noUiSlider.updateOptions({
-    range: {
-      min: +priceFieldElement.min,
-      max: +priceFieldElement.max
-    },
+const addFormListeners = () => {
+  checkTimeContainerElement.addEventListener('change', (evt) => {
+    evt.stopPropagation();
+    idToElement[evt.target.id].value = evt.target.value;
   });
 
-  if (!wasSliderDragged) {
-    sliderElement.noUiSlider.set(priceFieldElement.min);
-  }
+  capacityELement.addEventListener('change', () => {
+    adFormPristine.validate(roomNumberElement);
+  });
 
-  if (priceFieldElement.min === priceFieldElement.value) {
-    priceFieldElement.value = '';
-    wasSliderDragged = false;
-  }
+  typeInputElement.addEventListener('change', () => {
+    updatePriceFieldAttributes();
+    updateSlider();
+  });
+
+  adFormElement.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    if (adFormPristine.validate()) {
+      adFormElement.submit();
+    }
+  });
 };
 
-// События формы
-checkTimeContainerElement.addEventListener('change', (evt) => {
-  evt.stopPropagation();
-  idToElement[evt.target.id].value = evt.target.value;
-});
-
-capacityELement.addEventListener('change', () => {
-  adFormPristine.validate(roomNumberElement);
-});
-
-typeFieldElement.addEventListener('change', () => {
+const setInitialFormState = () => {
+  toggleFormsDisebledState();
   updatePriceFieldAttributes();
-  updateSlider();
-});
+};
 
-adFormElement.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-
-  if (adFormPristine.validate()) {
-    adFormElement.submit();
-  }
-});
-
-// События слайдера
-sliderElement.noUiSlider.on('start', () => {
-  wasSliderDragged = true;
-});
-
-sliderElement.noUiSlider.on('update', () => {
-  if (wasSliderDragged) {
-    priceFieldElement.value = sliderElement.noUiSlider.get();
-    adFormPristine.validate(priceFieldElement);
-  }
-});
-
-sliderElement.noUiSlider.on('end', () => {
-  if (priceFieldElement.min === priceFieldElement.value) {
-    priceFieldElement.value = '';
-    wasSliderDragged = false;
-  }
-});
-
-export { toggleFormsDisebledState, updatePriceFieldAttributes, updateSlider };
+export { setInitialFormState, toggleFormsDisebledState, addFormListeners };

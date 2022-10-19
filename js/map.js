@@ -1,6 +1,7 @@
 import { QuerySelector } from './dom-util.js';
 import { adFormPristine } from './pristine-setup.js';
 import { createAdElement } from './advertisement.js';
+import { getLatLngString } from './util.js';
 
 const TokyoCoordinate = {
   LAT: 35.65283,
@@ -24,7 +25,7 @@ const defaultCoordinate = {
   lng: TokyoCoordinate.LNG
 };
 
-const addressFieldElement = document.querySelector(QuerySelector.ID.ADDRESS);
+const addressInputElement = document.querySelector(QuerySelector.ID.ADDRESS);
 
 const createMapInstance = (mapId) => {
   const mapInstance = L.map(mapId);
@@ -70,12 +71,16 @@ const mainMarker = createMarker(defaultCoordinate, Icon.MAIN, true).addTo(map);
 const adMarkerGroup = createMarkerGroup().addTo(map);
 const renderMarkers = makeMarkerRender(adMarkerGroup);
 
-// События
-mainMarker.on('moveend', (evt) => {
-  const { lat, lng } = evt.target.getLatLng();
-  addressFieldElement.value = `lat:${lat.toFixed(5)}, lng:${lng.toFixed(5)}`;
+const updateAddressInputValue = () => {
+  const coordinate = mainMarker.getLatLng();
+  addressInputElement.value = getLatLngString(coordinate);
+};
 
-  adFormPristine.validate(addressFieldElement);
-});
+const addMapListeners = () => {
+  mainMarker.on('moveend', () => {
+    updateAddressInputValue ();
+    adFormPristine.validate(addressInputElement);
+  });
+};
 
-export { map, defaultCoordinate, renderMarkers };
+export { map, defaultCoordinate, renderMarkers, addMapListeners, updateAddressInputValue };

@@ -1,4 +1,4 @@
-import { createRandomElementsArray, getRandomArrayElement, getRandomDecimal, getRandomNumber } from './util.js';
+import { createRandomElementsArray, getLatLngString, getRandomArrayElement, getRandomDecimal, getRandomNumber } from './util.js';
 
 const Coordinate = {
   LAT_MIN: 35.65,
@@ -36,8 +36,10 @@ const PHOTOS = ['https://assets.htmlacademy.ru/content/intensive/javascript-1/ke
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'];
 
 const createDataFiller = (photoData) => (_, index) => {
-  const randomLat = getRandomDecimal(Coordinate.LAT_MIN, Coordinate.LAT_MAX, NUMBER_OF_DECIMALS);
-  const randomLng = getRandomDecimal(Coordinate.LNG_MIN, Coordinate.LNG_MAX, NUMBER_OF_DECIMALS);
+  const coordinate = {
+    lat: getRandomDecimal(Coordinate.LAT_MIN, Coordinate.LAT_MAX, NUMBER_OF_DECIMALS),
+    lng: getRandomDecimal(Coordinate.LNG_MIN, Coordinate.LNG_MAX, NUMBER_OF_DECIMALS)
+  };
 
   return {
     author: {
@@ -45,7 +47,7 @@ const createDataFiller = (photoData) => (_, index) => {
     },
     offer: {
       title: 'Лучший отель',
-      address: `${randomLat}, ${randomLng}`,
+      address: getLatLngString(coordinate),
       price: getRandomNumber(Price.MIN, Price.MAX),
       type: getRandomArrayElement(TYPES),
       rooms: getRandomNumber(Room.MIN, Room.MAX),
@@ -56,10 +58,7 @@ const createDataFiller = (photoData) => (_, index) => {
       description: 'Все комнаты в хорошем состоянии',
       photos: createRandomElementsArray(PHOTOS)
     },
-    location: {
-      lat: randomLat,
-      lng: randomLng
-    }
+    location: coordinate
   };
 };
 
