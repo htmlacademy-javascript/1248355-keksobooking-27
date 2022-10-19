@@ -31,9 +31,8 @@ const adFormValidatorData = {
     minPrice: 0,
     maxPrice: 100000,
     element: adFormElement.querySelector(QuerySelector.ID.PRICE),
-    connectedElement: adFormElement.querySelector(QuerySelector.ID.TYPE),
     validator: function (value) {
-      this.minPrice = +this.element.placeholder;
+      this.minPrice = +this.element.min;
       return value && this.minPrice <= +this.element.value && +this.element.value <= this.maxPrice;
     },
     messageHandler: function (value) {
@@ -51,7 +50,6 @@ const adFormValidatorData = {
     },
     messageHandler: function (value) {
       if (!value) {
-        this.element.value = 'lat:35.70606, lng:139.75654'; // координаты по умолчанию, заменить на центр Токио
         return 'Задайте координаты с помощью ползунка';
       }
     },
