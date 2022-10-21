@@ -11,7 +11,7 @@ const typeToRus = {
 };
 
 const addPhotos = (urls, container) => {
-  if (!urls) {
+  if (!urls || !urls.length) {
     toggleClass(container, ClassModifier.HIDDEN);
     return;
   }
@@ -29,7 +29,7 @@ const addPhotos = (urls, container) => {
 };
 
 const filterFeatures = (filters, container) => {
-  if (!filters) {
+  if (!filters || !filters.length) {
     toggleClass(container, ClassModifier.HIDDEN);
     return;
   }
@@ -48,6 +48,12 @@ const filterFeatures = (filters, container) => {
   });
 };
 
+const addPrice = (price, priceElement) => {
+  const priceSpanElement = priceElement.querySelector(QuerySelector.TAG_NAME.SPAN);
+  priceElement.textContent = `${price} `;
+  priceElement.append(priceSpanElement);
+};
+
 const createAdElement = (data) => {
   const adElement = adTemplateElement.cloneNode(true);
   const titleElement = adElement.querySelector(QuerySelector.CLASS_NAME.TITLE);
@@ -62,22 +68,15 @@ const createAdElement = (data) => {
   const photosContainerElement = adElement.querySelector(QuerySelector.CLASS_NAME.PHOTO_CONTAINER);
 
   avatarElement.src = data.author.avatar || toggleClass(avatarElement, ClassModifier.HIDDEN);
-  titleElement.textContent = data.offer.title || toggleClass(titleElement, ClassModifier.HIDDEN);
-  addressElement.textContent = data.offer.address || toggleClass(addressElement, ClassModifier.HIDDEN);
-  priceElement.textContent = `${data.offer.price || toggleClass(priceElement, ClassModifier.HIDDEN)} ₽/ночь`;
-  typeElement.textContent = typeToRus[data.offer.type] || toggleClass(typeElement, ClassModifier.HIDDEN);
   descriptionElement.textContent = data.offer.description || toggleClass(descriptionElement, ClassModifier.HIDDEN);
-
-  capasityElement.textContent = data.offer.rooms && data.offer.guests
-    ? `${data.offer.rooms} комнаты для ${data.offer.guests} гостей`
-    : toggleClass(capasityElement, ClassModifier.HIDDEN);
-
-  timeElement.textContent = data.offer.checkin && data.offer.checkout
-    ? `Заезд после ${data.offer.checkin}, выезд до ${data.offer.checkout}`
-    : toggleClass(timeElement, ClassModifier.HIDDEN);
-
+  typeElement.textContent = typeToRus[data.offer.type];
+  titleElement.textContent = data.offer.title;
+  addressElement.textContent = data.offer.address;
+  capasityElement.textContent = `${data.offer.rooms} комнаты для ${data.offer.guests} гостей`;
+  timeElement.textContent = `Заезд после ${data.offer.checkin}, выезд до ${data.offer.checkout}`;
 
   addPhotos(data.offer.photos, photosContainerElement);
+  addPrice(data.offer.price, priceElement);
   filterFeatures(data.offer.features, featuresContainerElement);
 
   return adElement;

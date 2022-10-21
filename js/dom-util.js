@@ -23,7 +23,8 @@ const QuerySelector = {
     SLIDER: '.ad-form__slider'
   },
   TAG_NAME: {
-    FIELDSET: 'fieldset'
+    FIELDSET: 'fieldset',
+    SPAN: 'span'
   },
   ID: {
     TITLE: '#title',

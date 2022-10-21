@@ -78,7 +78,7 @@ const updateAddressInputValue = () => {
 
 const addMapListeners = () => {
   mainMarker.on('moveend', () => {
-    updateAddressInputValue ();
+    updateAddressInputValue();
     adFormPristine.validate(addressInputElement);
   });
 };
