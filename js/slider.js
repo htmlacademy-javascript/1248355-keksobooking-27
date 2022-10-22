@@ -1,8 +1,6 @@
 import { QuerySelector } from './dom-util.js';
-import { adFormPristine } from './pristine-setup.js';
 
 const sliderElement = document.querySelector(QuerySelector.CLASS_NAME.SLIDER);
-const priceFieldElement = document.querySelector(QuerySelector.ID.PRICE);
 let wasSliderDragged;
 
 noUiSlider.create(sliderElement, {
@@ -19,42 +17,44 @@ noUiSlider.create(sliderElement, {
   }
 });
 
-const updateSlider = () => {
+const updateSlider = (inputElement) => {
   sliderElement.noUiSlider.updateOptions({
     range: {
-      min: +priceFieldElement.min,
-      max: +priceFieldElement.max
+      min: +inputElement.min,
+      max: +inputElement.max
     },
   });
 
   if (!wasSliderDragged) {
-    sliderElement.noUiSlider.set(priceFieldElement.min);
+    sliderElement.noUiSlider.set(inputElement.min);
   }
 
-  if (priceFieldElement.min === priceFieldElement.value) {
-    priceFieldElement.value = '';
+  if (inputElement.min === inputElement.value) {
+    inputElement.value = '';
     wasSliderDragged = false;
   }
 };
 
-const addSliderListeners = () => {
+const setSlider = (inputElement, pristine) => {
+  updateSlider(inputElement);
+
   sliderElement.noUiSlider.on('start', () => {
     wasSliderDragged = true;
   });
 
   sliderElement.noUiSlider.on('update', () => {
     if (wasSliderDragged) {
-      priceFieldElement.value = sliderElement.noUiSlider.get();
-      adFormPristine.validate(priceFieldElement);
+      inputElement.value = sliderElement.noUiSlider.get();
+      pristine.validate(inputElement);
     }
   });
 
   sliderElement.noUiSlider.on('end', () => {
-    if (priceFieldElement.min === priceFieldElement.value) {
-      priceFieldElement.value = '';
+    if (inputElement.min === inputElement.value) {
+      inputElement.value = '';
       wasSliderDragged = false;
     }
   });
 };
 
-export { addSliderListeners, updateSlider };
+export { setSlider, updateSlider };

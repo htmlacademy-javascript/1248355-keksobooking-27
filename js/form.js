@@ -1,6 +1,7 @@
 import { QuerySelector, ClassModifier, createClassName, toggleClass, toggleDisabledState } from './dom-util.js';
 import { adFormPristine } from './pristine-setup.js';
-import { updateSlider } from './slider.js';
+import { setSlider, updateSlider } from './slider.js';
+import { getLatLngString } from './util.js';
 
 const adFormElement = document.querySelector(QuerySelector.CLASS_NAME.AD_FORM);
 const capacityELement = adFormElement.querySelector(QuerySelector.ID.CAPASITY);
@@ -9,6 +10,7 @@ const typeInputElement = adFormElement.querySelector(QuerySelector.ID.TYPE);
 const priceInputElement = adFormElement.querySelector(QuerySelector.ID.PRICE);
 const timeinInputElement = adFormElement.querySelector(QuerySelector.ID.TIMEIN);
 const timeoutInputElement = adFormElement.querySelector(QuerySelector.ID.TIMEOUT);
+const addressInputElement = document.querySelector(QuerySelector.ID.ADDRESS);
 const checkTimeContainerElement = adFormElement.querySelector(QuerySelector.CLASS_NAME.CHECK_TIME_CONTAINER);
 const adFormsfieldsetElements = adFormElement.querySelectorAll(QuerySelector.TAG_NAME.FIELDSET);
 const mapFormElement = document.querySelector(QuerySelector.CLASS_NAME.MAP_FORM);
@@ -44,7 +46,11 @@ const updatePriceFieldAttributes = () => {
   }
 };
 
-const addFormListeners = () => {
+const updateAddressInputValue = (coordinate) => {
+  addressInputElement.value = getLatLngString(coordinate);
+};
+
+const setFormEvents = () => {
   checkTimeContainerElement.addEventListener('change', (evt) => {
     evt.stopPropagation();
     idToElement[evt.target.id].value = evt.target.value;
@@ -56,7 +62,7 @@ const addFormListeners = () => {
 
   typeInputElement.addEventListener('change', () => {
     updatePriceFieldAttributes();
-    updateSlider();
+    updateSlider(priceInputElement);
   });
 
   adFormElement.addEventListener('submit', (evt) => {
@@ -71,6 +77,8 @@ const addFormListeners = () => {
 const setInitialFormState = () => {
   toggleFormsDisebledState();
   updatePriceFieldAttributes();
+  setSlider(priceInputElement, adFormPristine);
+  setFormEvents();
 };
 
-export { setInitialFormState, toggleFormsDisebledState, addFormListeners };
+export { setInitialFormState, toggleFormsDisebledState, updateAddressInputValue };
