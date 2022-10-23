@@ -1,5 +1,4 @@
 import { QuerySelector, ClassModifier, createClassName, toggleClass, toggleDisabledState } from './dom-util.js';
-import { adFormPristine } from './pristine-setup.js';
 import { setSlider, updateSlider } from './slider.js';
 import { getLatLngString } from './util.js';
 
@@ -37,12 +36,12 @@ const toggleFormsDisebledState = () => {
   toggleClass(mapFormElement, createClassName(QuerySelector.CLASS_NAME.MAP_FORM, ClassModifier.DISABLED));
 };
 
-const updatePriceFieldAttributes = () => {
+const updatePriceFieldAttributes = (pristine) => {
   priceInputElement.placeholder = typeToMinPrice[typeInputElement.value];
   priceInputElement.min = typeToMinPrice[typeInputElement.value];
 
   if (priceInputElement.value) {
-    adFormPristine.validate(priceInputElement);
+    pristine.validate(priceInputElement);
   }
 };
 
@@ -50,35 +49,36 @@ const updateAddressInputValue = (coordinate) => {
   addressInputElement.value = getLatLngString(coordinate);
 };
 
-const setFormEvents = () => {
+const setFormEvents = (pristine) => {
   checkTimeContainerElement.addEventListener('change', (evt) => {
     evt.stopPropagation();
     idToElement[evt.target.id].value = evt.target.value;
   });
 
   capacityELement.addEventListener('change', () => {
-    adFormPristine.validate(roomNumberElement);
+    pristine.validate(roomNumberElement);
   });
 
   typeInputElement.addEventListener('change', () => {
-    updatePriceFieldAttributes();
+    updatePriceFieldAttributes(pristine);
     updateSlider(priceInputElement);
+    pristine.validate(priceInputElement);
   });
 
   adFormElement.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
-    if (adFormPristine.validate()) {
+    if (pristine.validate()) {
       adFormElement.submit();
     }
   });
 };
 
-const setInitialFormState = () => {
+const setInitialFormState = (pristine) => {
   toggleFormsDisebledState();
-  updatePriceFieldAttributes();
-  setSlider(priceInputElement, adFormPristine);
-  setFormEvents();
+  updatePriceFieldAttributes(pristine);
+  setSlider(priceInputElement, pristine);
+  setFormEvents(pristine);
 };
 
 export { setInitialFormState, toggleFormsDisebledState, updateAddressInputValue };
