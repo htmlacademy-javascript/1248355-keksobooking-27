@@ -1,5 +1,3 @@
-import { QuerySelector } from './dom-util.js';
-import { adFormPristine } from './pristine-setup.js';
 import { createAdElement } from './advertisement.js';
 
 const TokyoCoordinate = {
@@ -23,8 +21,6 @@ const defaultCoordinate = {
   lat: TokyoCoordinate.LAT,
   lng: TokyoCoordinate.LNG
 };
-
-const addressFieldElement = document.querySelector(QuerySelector.ID.ADDRESS);
 
 const createMapInstance = (mapId) => {
   const mapInstance = L.map(mapId);
@@ -70,12 +66,25 @@ const mainMarker = createMarker(defaultCoordinate, Icon.MAIN, true).addTo(map);
 const adMarkerGroup = createMarkerGroup().addTo(map);
 const renderMarkers = makeMarkerRender(adMarkerGroup);
 
-// События
-mainMarker.on('moveend', (evt) => {
-  const { lat, lng } = evt.target.getLatLng();
-  addressFieldElement.value = `lat:${lat.toFixed(5)}, lng:${lng.toFixed(5)}`;
+const getMarkerCoordinate = () => mainMarker.getLatLng();
 
-  adFormPristine.validate(addressFieldElement);
-});
+const setMarkerCoordinate = (coordinate = defaultCoordinate) => mainMarker.setLatLng(coordinate);
 
-export { map, defaultCoordinate, renderMarkers };
+const setMapView = (coordinate = defaultCoordinate) => map.setView(coordinate, 10);
+
+const closeBalloon = () => map.closePopup();
+
+const resetMap = () => {
+  setMarkerCoordinate();
+  setMapView();
+  closeBalloon();
+};
+
+const setMainMarkerDrag = (cb) => {
+  cb(getMarkerCoordinate());
+  mainMarker.on('moveend', () => {
+    cb(getMarkerCoordinate());
+  });
+};
+
+export { map, defaultCoordinate, renderMarkers, setMainMarkerDrag, getMarkerCoordinate, resetMap };

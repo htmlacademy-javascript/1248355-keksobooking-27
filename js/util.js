@@ -28,4 +28,6 @@ const createRandomElementsArray = (elements, isRandomLength = true) => {
   return arrCopy.slice(0, arrLength);
 };
 
-export { getRandomArrayElement, createRandomElementsArray, getRandomDecimal, getRandomNumber};
+const getLatLngString = ({ lat, lng }, numberOfDecimals = 5) => `lat:${lat.toFixed(numberOfDecimals)}, lng:${lng.toFixed(numberOfDecimals)}`;
+
+export { getRandomArrayElement, createRandomElementsArray, getRandomDecimal, getRandomNumber, getLatLngString };
