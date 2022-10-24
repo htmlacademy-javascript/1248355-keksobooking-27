@@ -57,7 +57,7 @@ const createClassName = (querySelector, modifer) => modifer
   : `${querySelector}`.slice(1);
 
 const toggleDisabledState = (elements) => {
-  if (Array.isArray(elements)) {
+  if (elements.length && elements.length > 0) {
     elements.forEach((element) => {
       element.disabled = !element.disabled;
     });
