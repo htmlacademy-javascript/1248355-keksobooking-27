@@ -34,6 +34,10 @@ const updateSlider = (inputElement) => {
     wasSliderDragged = false;
   }
 };
+const resetSlider = (inputElement) => {
+  wasSliderDragged = false;
+  updateSlider(inputElement);
+};
 
 const setSlider = (inputElement, pristine) => {
   updateSlider(inputElement);
@@ -57,4 +61,4 @@ const setSlider = (inputElement, pristine) => {
   });
 };
 
-export { setSlider, updateSlider };
+export { setSlider, updateSlider, resetSlider };

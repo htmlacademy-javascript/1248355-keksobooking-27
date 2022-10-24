@@ -1,3 +1,5 @@
+const ALERT_SHOW_TIME = 5000;
+
 const QuerySelector = {
   CLASS_NAME: {
     ADS_CONTAINER: '.map__canvas',
@@ -20,7 +22,11 @@ const QuerySelector = {
     MAP_FILTER: '.map__filter',
     MAP_FEATURES: '.map__features',
     CHECK_TIME_CONTAINER: '.ad-form__element--time',
-    SLIDER: '.ad-form__slider'
+    SLIDER: '.ad-form__slider',
+    SUCCESS: '.success',
+    ERROR: '.error',
+    RESET_BTN: '.ad-form__reset',
+    SUBMIT_BTN: '.ad-form__submit'
   },
   TAG_NAME: {
     FIELDSET: 'fieldset',
@@ -34,7 +40,9 @@ const QuerySelector = {
     CAPASITY: '#capacity',
     TYPE: '#type',
     TIMEIN: '#timein',
-    TIMEOUT: '#timeout'
+    TIMEOUT: '#timeout',
+    SUCCESS: '#success',
+    ERROR: '#error'
   }
 };
 const ClassModifier = {
@@ -48,8 +56,37 @@ const createClassName = (querySelector, modifer) => modifer
   ? `${querySelector}--${modifer}`.slice(1)
   : `${querySelector}`.slice(1);
 
-const toggleDisabledState = (elements) => elements.forEach((element) => {
-  element.disabled = !element.disabled;
-});
+const toggleDisabledState = (elements) => {
+  if (Array.isArray(elements)) {
+    elements.forEach((element) => {
+      element.disabled = !element.disabled;
+    });
+  } else {
+    elements.disabled = !elements.disabled;
+  }
+};
 
-export { toggleClass, createClassName, toggleDisabledState, ClassModifier, QuerySelector };
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+const showAlert = (message, container) => {
+  const alertContainer = document.createElement('div');
+  alertContainer.style.zIndex = '1000';
+  alertContainer.style.position = 'absolute';
+  alertContainer.style.left = '0';
+  alertContainer.style.top = '0';
+  alertContainer.style.right = '0';
+  alertContainer.style.padding = '15px 3px';
+  alertContainer.style.fontSize = '30px';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.backgroundColor = 'red';
+
+  alertContainer.textContent = message;
+
+  container.append(alertContainer);
+
+  setTimeout(() => {
+    alertContainer.remove();
+  }, ALERT_SHOW_TIME);
+};
+
+export { toggleClass, createClassName, toggleDisabledState, isEscapeKey, showAlert, ClassModifier, QuerySelector };

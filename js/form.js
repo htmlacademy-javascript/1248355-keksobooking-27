@@ -1,6 +1,8 @@
 import { QuerySelector, ClassModifier, createClassName, toggleClass, toggleDisabledState } from './dom-util.js';
-import { setSlider, updateSlider } from './slider.js';
+import { setSlider, updateSlider, resetSlider } from './slider.js';
 import { getLatLngString } from './util.js';
+import { sendData } from './api.js';
+import { showModal } from './form-modal.js';
 
 const adFormElement = document.querySelector(QuerySelector.CLASS_NAME.AD_FORM);
 const capacityELement = adFormElement.querySelector(QuerySelector.ID.CAPASITY);
@@ -15,6 +17,8 @@ const adFormsfieldsetElements = adFormElement.querySelectorAll(QuerySelector.TAG
 const mapFormElement = document.querySelector(QuerySelector.CLASS_NAME.MAP_FORM);
 const mapFormsElements = mapFormElement.querySelectorAll(QuerySelector.CLASS_NAME.MAP_FILTER);
 const mapFormsFieldsetElements = mapFormElement.querySelectorAll(QuerySelector.TAG_NAME.FIELDSET);
+const resetBtnElement = adFormElement.querySelector(QuerySelector.CLASS_NAME.RESET_BTN);
+const submitBtnElement = adFormElement.querySelector(QuerySelector.CLASS_NAME.SUBMIT_BTN);
 
 const typeToMinPrice = {
   flat: '1000',
@@ -28,18 +32,24 @@ const idToElement = {
   'timeout': timeinInputElement
 };
 
-const toggleFormsDisebledState = () => {
-  toggleDisabledState(adFormsfieldsetElements);
+const toggleFiltersDisebledState = () => {
   toggleDisabledState(mapFormsElements);
   toggleDisabledState(mapFormsFieldsetElements);
-  toggleClass(adFormElement, createClassName(QuerySelector.CLASS_NAME.AD_FORM, ClassModifier.DISABLED));
   toggleClass(mapFormElement, createClassName(QuerySelector.CLASS_NAME.MAP_FORM, ClassModifier.DISABLED));
 };
 
-const updatePriceFieldAttributes = (pristine) => {
+const toggleAdFormDisebledState = () => {
+  toggleDisabledState(adFormsfieldsetElements);
+  toggleClass(adFormElement, createClassName(QuerySelector.CLASS_NAME.AD_FORM, ClassModifier.DISABLED));
+};
+
+const updatePriceFieldAttributes = (pristine, isReset = false) => {
   priceInputElement.placeholder = typeToMinPrice[typeInputElement.value];
   priceInputElement.min = typeToMinPrice[typeInputElement.value];
-
+  if (isReset) {
+    pristine.reset();
+    return;
+  }
   if (priceInputElement.value) {
     pristine.validate(priceInputElement);
   }
@@ -49,36 +59,73 @@ const updateAddressInputValue = (coordinate) => {
   addressInputElement.value = getLatLngString(coordinate);
 };
 
-const setFormEvents = (pristine) => {
+const setCheckTimeChange = () => {
   checkTimeContainerElement.addEventListener('change', (evt) => {
     evt.stopPropagation();
     idToElement[evt.target.id].value = evt.target.value;
   });
+};
 
+const setCapasityChange = (pristine) => {
   capacityELement.addEventListener('change', () => {
     pristine.validate(roomNumberElement);
   });
+};
 
+const setTypeChange = (pristine) => {
   typeInputElement.addEventListener('change', () => {
     updatePriceFieldAttributes(pristine);
     updateSlider(priceInputElement);
-    pristine.validate(priceInputElement);
   });
+};
 
-  adFormElement.addEventListener('submit', (evt) => {
+const setFormReset = (pristine, getCoordinate, resetMap) => {
+  resetBtnElement.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    adFormElement.reset();
+    mapFormElement.reset();
+    updatePriceFieldAttributes(pristine, true);
+    resetSlider(priceInputElement);
+    resetMap();
+    updateAddressInputValue(getCoordinate());
+  });
+};
+
+const setFormSubmit = (pristine) => {
+  submitBtnElement.addEventListener('click', (evt) => {
     evt.preventDefault();
 
     if (pristine.validate()) {
-      adFormElement.submit();
+      toggleDisabledState(evt.target);
+      sendData(
+        () => {
+          resetBtnElement.click();
+          toggleDisabledState(evt.target);
+          showModal('success');
+        },
+        () => {
+          showModal('error');
+          toggleDisabledState(evt.target);
+        },
+        new FormData(adFormElement)
+      );
     }
   });
 };
 
-const setInitialFormState = (pristine) => {
-  toggleFormsDisebledState();
-  updatePriceFieldAttributes(pristine);
+const setFormEventListeners = (pristine, getCoordinate, resetMap) => {
+  setFormSubmit(pristine);
+  setTypeChange(pristine);
+  setCapasityChange(pristine);
+  setCheckTimeChange();
+  setFormReset(pristine, getCoordinate, resetMap);
   setSlider(priceInputElement, pristine);
-  setFormEvents(pristine);
 };
 
-export { setInitialFormState, toggleFormsDisebledState, updateAddressInputValue };
+const setInitialFormState = (pristine) => {
+  toggleAdFormDisebledState();
+  toggleFiltersDisebledState();
+  updatePriceFieldAttributes(pristine);
+};
+
+export { setInitialFormState, toggleAdFormDisebledState, toggleFiltersDisebledState, updateAddressInputValue, setFormEventListeners };

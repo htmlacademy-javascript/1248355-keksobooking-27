@@ -66,11 +66,25 @@ const mainMarker = createMarker(defaultCoordinate, Icon.MAIN, true).addTo(map);
 const adMarkerGroup = createMarkerGroup().addTo(map);
 const renderMarkers = makeMarkerRender(adMarkerGroup);
 
-const setMainMarkerDragEvent = (cb) => {
-  cb(mainMarker.getLatLng());
+const getMarkerCoordinate = () => mainMarker.getLatLng();
+
+const setMarkerCoordinate = (coordinate = defaultCoordinate) => mainMarker.setLatLng(coordinate);
+
+const setMapView = (coordinate = defaultCoordinate) => map.setView(coordinate, 10);
+
+const closeBalloon = () => map.closePopup();
+
+const resetMap = () => {
+  setMarkerCoordinate();
+  setMapView();
+  closeBalloon();
+};
+
+const setMainMarkerDrag = (cb) => {
+  cb(getMarkerCoordinate());
   mainMarker.on('moveend', () => {
-    cb(mainMarker.getLatLng());
+    cb(getMarkerCoordinate());
   });
 };
 
-export { map, defaultCoordinate, renderMarkers, setMainMarkerDragEvent };
+export { map, defaultCoordinate, renderMarkers, setMainMarkerDrag, getMarkerCoordinate, resetMap };
