@@ -1,5 +1,5 @@
 import { QuerySelector, ClassModifier, createClassName, toggleClass, toggleDisabledState } from './dom-util.js';
-import { setSlider, updateSlider, resetSlider } from './slider.js';
+import { setSlider, updateSlider, resetSlider, setInputValueToSlider } from './slider.js';
 import { getLatLngString } from './util.js';
 import { sendData } from './api.js';
 import { showModal } from './form-modal.js';
@@ -79,6 +79,11 @@ const setTypeChange = (pristine) => {
   });
 };
 
+const setPriceChange = () => {
+  priceInputElement.addEventListener('change', (evt) => setInputValueToSlider(evt.target));
+};
+
+
 const setFormReset = (pristine, getCoordinate, resetMap) => {
   resetBtnElement.addEventListener('click', (evt) => {
     evt.preventDefault();
@@ -104,8 +109,8 @@ const setFormSubmit = (pristine) => {
           showModal('success');
         },
         () => {
-          showModal('error');
           toggleDisabledState(evt.target);
+          showModal('error');
         },
         new FormData(adFormElement)
       );
@@ -118,6 +123,7 @@ const setFormEventListeners = (pristine, getCoordinate, resetMap) => {
   setTypeChange(pristine);
   setCapasityChange(pristine);
   setCheckTimeChange();
+  setPriceChange();
   setFormReset(pristine, getCoordinate, resetMap);
   setSlider(priceInputElement, pristine);
 };

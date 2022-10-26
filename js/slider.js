@@ -39,6 +39,11 @@ const resetSlider = (inputElement) => {
   updateSlider(inputElement);
 };
 
+const setInputValueToSlider = (inputElement) => {
+  wasSliderDragged = true;
+  sliderElement.noUiSlider.set(inputElement.value);
+};
+
 const setSlider = (inputElement, pristine) => {
   updateSlider(inputElement);
 
@@ -61,4 +66,4 @@ const setSlider = (inputElement, pristine) => {
   });
 };
 
-export { setSlider, updateSlider, resetSlider };
+export { setSlider, updateSlider, resetSlider, setInputValueToSlider };
