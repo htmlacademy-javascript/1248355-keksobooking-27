@@ -1,10 +1,15 @@
-import { setInitialFormState, updateAddressInputValue, toggleAdFormDisebledState, toggleFiltersDisebledState, setFormEventListeners } from './form.js';
+import { setInitialFormState, updateAddressInputValue, toggleAdFormDisebledState, setFormEventListeners } from './form.js';
 import { map, defaultCoordinate, renderMarkers, setMainMarkerDrag, getMarkerCoordinate, resetMap } from './map.js';
+import { toggleFiltersDisebledState, setFilterFormEventListeners } from './filter.js';
 import { adFormPristine } from './pristine-setup.js';
 import { getData } from './api.js';
 import { showAlert } from './dom-util.js';
+import { debounce } from './util.js';
+
+const DEBOUNCE_DELAY = 500;
 
 setInitialFormState(adFormPristine);
+toggleFiltersDisebledState();
 setFormEventListeners(adFormPristine, getMarkerCoordinate, resetMap);
 
 map.on('load', () => {
@@ -12,7 +17,8 @@ map.on('load', () => {
   setMainMarkerDrag(updateAddressInputValue);
   getData(
     (data) => {
-      renderMarkers(data.slice(0, 10));
+      renderMarkers(data);
+      setFilterFormEventListeners(debounce(renderMarkers, DEBOUNCE_DELAY), data);
       toggleFiltersDisebledState();
     },
     (error) => {

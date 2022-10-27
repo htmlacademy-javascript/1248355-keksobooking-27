@@ -1,5 +1,7 @@
 import { createAdElement } from './advertisement.js';
 
+const NUMBER_OF_ADVERTISEMENTS = 10;
+
 const TokyoCoordinate = {
   LAT: 35.65283,
   LNG: 139.83947
@@ -51,20 +53,9 @@ const createMarker = ({ lat, lng }, icon, draggable = false) => {
 
 const createMarkerGroup = () => L.layerGroup();
 
-// Возможно переделаю эту fn в 12 модуле, так как сейчас не понимаю как будут использоваться группы в в фильтрации
-const makeMarkerRender = (markersGroup) => (data) => {
-  data.forEach(({ location, ...rest }) => {
-    const adMarker = createMarker(location, Icon.AD);
-    adMarker
-      .addTo(markersGroup)
-      .bindPopup(createAdElement(rest));
-  });
-};
-
 const map = createMapInstance('map-canvas');
 const mainMarker = createMarker(defaultCoordinate, Icon.MAIN, true).addTo(map);
 const adMarkerGroup = createMarkerGroup().addTo(map);
-const renderMarkers = makeMarkerRender(adMarkerGroup);
 
 const getMarkerCoordinate = () => mainMarker.getLatLng();
 
@@ -72,7 +63,20 @@ const setMarkerCoordinate = (coordinate = defaultCoordinate) => mainMarker.setLa
 
 const setMapView = (coordinate = defaultCoordinate) => map.setView(coordinate, 10);
 
+const deleteBalloons = () => adMarkerGroup.clearLayers();
+
 const closeBalloon = () => map.closePopup();
+
+const renderMarkers = (data) => {
+  deleteBalloons();
+
+  data.slice(0, NUMBER_OF_ADVERTISEMENTS).forEach(({ location, ...rest }) => {
+    const adMarker = createMarker(location, Icon.AD);
+    adMarker
+      .addTo(adMarkerGroup)
+      .bindPopup(createAdElement(rest));
+  });
+};
 
 const resetMap = () => {
   setMarkerCoordinate();

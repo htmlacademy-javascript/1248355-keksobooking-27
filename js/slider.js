@@ -34,6 +34,7 @@ const updateSlider = (inputElement) => {
     wasSliderDragged = false;
   }
 };
+
 const resetSlider = (inputElement) => {
   wasSliderDragged = false;
   updateSlider(inputElement);
