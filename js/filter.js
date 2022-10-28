@@ -27,11 +27,11 @@ const toggleFiltersDisebledState = () => {
   toggleClass(filtersFormElement, createClassName(QuerySelector.CLASS_NAME.MAP_FILTERS, ClassModifier.DISABLED));
 };
 
-const getOfferKey = (inputName) => inputName.slice(inputName.indexOf('-') + 1);
+const getDataKey = (inputName) => inputName.slice(inputName.indexOf('-') + 1);
 
 const isPriceInRange = (price, priceRange) => priceRangeToValue[priceRange].min <= price && price <= priceRangeToValue[priceRange].max;
 
-const findCheckedFeatureas = () => {
+const findCheckedFeatures = () => {
   const checkedElements = [];
 
   featureFilterElements.forEach((filterElement) => {
@@ -43,27 +43,32 @@ const findCheckedFeatureas = () => {
   return checkedElements;
 };
 
-const applyCheckboxFilters = (data) => data.filter(({ offer: { features } }) => {
-  const checkedFilterElements = findCheckedFeatureas();
+const isPickedFilterValueInData = (filterElement, data) => {
+  const key = getDataKey(filterElement.name);
+
+  switch (key) {
+    case 'price':
+      return isPriceInRange(data[key], filterElement.value);
+    case 'type':
+      return data[key] === filterElement.value;
+    default:
+      return data[key] === +filterElement.value;
+  }
+};
+
+const applyCheckboxFilters = (data) => {
+  const checkedFilterElements = findCheckedFeatures();
 
   if (!checkedFilterElements.length) {
     return data;
   }
 
-  let coincedence = 0;
-
-  if (features) {
-    checkedFilterElements.forEach((filterElement) => {
-      if (features.includes(filterElement.value)) {
-        coincedence++;
-      }
-    });
-
-    return coincedence === checkedFilterElements.length;
-  }
-
-  return coincedence;
-});
+  return data.filter(({ offer: { features } }) => {
+    if (features) {
+      return checkedFilterElements.every((filterElement) => features.includes(filterElement.value));
+    }
+  });
+};
 
 const applySelectFilters = (data) => data.filter(({ offer }) => {
   let coincidenceCount = 0;
@@ -75,11 +80,7 @@ const applySelectFilters = (data) => data.filter(({ offer }) => {
       return;
     }
 
-    const key = getOfferKey(filterElement.name);
-
-    if (key === 'price' && isPriceInRange(offer[key], filterElement.value)) {
-      coincidenceCount++;
-    } else if (offer[key] === 0 || offer[key] === (+filterElement.value || filterElement.value)) {
+    if (isPickedFilterValueInData(filterElement, offer)) {
       coincidenceCount++;
     }
   });
