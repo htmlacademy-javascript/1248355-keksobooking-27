@@ -27,7 +27,9 @@ const QuerySelector = {
     SUCCESS: '.success',
     ERROR: '.error',
     RESET_BTN: '.ad-form__reset',
-    SUBMIT_BTN: '.ad-form__submit'
+    SUBMIT_BTN: '.ad-form__submit',
+    AVATAR_IMG: '.ad-form-header__preview img',
+    PHOTO_PREVIEW_CONTAINER: '.ad-form__photo'
   },
   TAG_NAME: {
     FIELDSET: 'fieldset',
@@ -43,7 +45,9 @@ const QuerySelector = {
     TIMEIN: '#timein',
     TIMEOUT: '#timeout',
     SUCCESS: '#success',
-    ERROR: '#error'
+    ERROR: '#error',
+    AVATAR: '#avatar',
+    PHOTO: '#images'
   }
 };
 const ClassModifier = {

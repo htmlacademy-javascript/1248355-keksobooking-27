@@ -3,6 +3,7 @@ import { setSlider, updateSlider, resetSlider, setInputValueToSlider } from './s
 import { getLatLngString } from './util.js';
 import { sendData } from './api.js';
 import { showModal } from './form-modal.js';
+import { setAvatarImgChange, setPhotoImgChange, clearImagesPreview } from './image.js';
 
 const adFormElement = document.querySelector(QuerySelector.CLASS_NAME.AD_FORM);
 const capacityELement = adFormElement.querySelector(QuerySelector.ID.CAPASITY);
@@ -41,7 +42,10 @@ const updatePriceFieldAttributes = (pristine, isReset = false) => {
 
   if (isReset) {
     pristine.reset();
-  } else if (priceInputElement.value) {
+    return;
+  }
+
+  if (priceInputElement.value) {
     pristine.validate(priceInputElement);
   }
 };
@@ -81,6 +85,7 @@ const setFormReset = (pristine, getCoordinate, resetMap) => {
     updatePriceFieldAttributes(pristine, true);
     resetSlider(priceInputElement);
     resetMap();
+    clearImagesPreview();
     updateAddressInputValue(getCoordinate());
   });
 };
@@ -115,6 +120,8 @@ const setFormEventListeners = (pristine, getCoordinate, resetMap) => {
   setPriceChange();
   setFormReset(pristine, getCoordinate, resetMap);
   setSlider(priceInputElement, pristine);
+  setAvatarImgChange();
+  setPhotoImgChange();
 };
 
 const setInitialFormState = (pristine) => {
