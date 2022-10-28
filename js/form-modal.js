@@ -11,13 +11,11 @@ const typeToElement = {
 const modalEscKeydownHandler = (evt) => {
   if (isEscapeKey(evt)) {
     closeModal();
-
   }
 };
 
 const modalClickHandler = () => {
   closeModal();
-
 };
 
 const showModal = (type) => {

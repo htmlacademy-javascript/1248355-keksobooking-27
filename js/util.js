@@ -30,4 +30,12 @@ const createRandomElementsArray = (elements, isRandomLength = true) => {
 
 const getLatLngString = ({ lat, lng }, numberOfDecimals = 5) => `lat:${lat.toFixed(numberOfDecimals)}, lng:${lng.toFixed(numberOfDecimals)}`;
 
-export { getRandomArrayElement, createRandomElementsArray, getRandomDecimal, getRandomNumber, getLatLngString };
+const debounce = (cb, delay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => cb(...rest), delay);
+  };
+};
+
+export { getRandomArrayElement, createRandomElementsArray, getRandomDecimal, getRandomNumber, getLatLngString, debounce };

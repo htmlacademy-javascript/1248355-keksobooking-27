@@ -1,10 +1,10 @@
 const Url = {
-  DATA: 'https://27.javascript.pages.academy/keksobooking/data',
-  SERVER: 'https://27.javascript.pages.academy/keksobooking'
+  GET: 'https://27.javascript.pages.academy/keksobooking/data',
+  POST: 'https://27.javascript.pages.academy/keksobooking'
 };
 
-const getData = (onSuccess, OnError) => {
-  fetch(Url.DATA)
+const getData = (onSuccess, onError) => {
+  fetch(Url.GET)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -12,12 +12,12 @@ const getData = (onSuccess, OnError) => {
       throw new Error('Ошибка загрузки информации с сервера');
     })
     .then((response) => onSuccess(response))
-    .catch((error) => OnError(error.message));
+    .catch((error) => onError(error.message));
 };
 
-const sendData = (onSuccess, OnError, body) => {
+const sendData = (onSuccess, onError, body) => {
   fetch(
-    Url.SERVER,
+    Url.POST,
     {
       method: 'POST',
       body
@@ -30,7 +30,7 @@ const sendData = (onSuccess, OnError, body) => {
         throw new Error('Ошибка размещения объявления');
       }
     })
-    .catch((error) => OnError(error.message));
+    .catch((error) => onError(error.message));
 };
 
 export { getData, sendData };
