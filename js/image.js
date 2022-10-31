@@ -15,6 +15,8 @@ const setAvatarImgChange = () => {
     const file = evt.target.files[0];
     if (isFileType(file)) {
       avatarImgElement.src = URL.createObjectURL(file);
+    } else {
+      evt.target.value = '';
     }
   });
 };
@@ -29,6 +31,8 @@ const setPhotoImgChange = () => {
       imgElement.src = URL.createObjectURL(file);
       imgElement.style.width = '100%';
       photoContainerElement.append(imgElement);
+    } else {
+      evt.target.value = '';
     }
   });
 };
