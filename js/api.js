@@ -9,6 +9,7 @@ const getData = (onSuccess, onError) => {
       if (response.ok) {
         return response.json();
       }
+
       throw new Error('Ошибка загрузки информации с сервера');
     })
     .then((response) => onSuccess(response))

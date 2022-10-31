@@ -19,6 +19,7 @@ const getRandomArrayElement = (elements) => elements[getRandomArrayIndex(element
 
 const createRandomElementsArray = (elements, isRandomLength = true) => {
   const arrCopy = [...elements];
+
   for (let i = arrCopy.length - 1; i > 0; i--) {
     const randomIndex = getRandomNumber(0, i);
     [arrCopy[i], arrCopy[randomIndex]] = [arrCopy[randomIndex], arrCopy[i]];
@@ -28,14 +29,33 @@ const createRandomElementsArray = (elements, isRandomLength = true) => {
   return arrCopy.slice(0, arrLength);
 };
 
-const getLatLngString = ({ lat, lng }, numberOfDecimals = 5) => `lat:${lat.toFixed(numberOfDecimals)}, lng:${lng.toFixed(numberOfDecimals)}`;
+const getLatLngString = ({ lat, lng }, numberOfDecimals = 5) =>
+  `lat:${lat.toFixed(numberOfDecimals)}, lng:${lng.toFixed(numberOfDecimals)}`;
 
 const debounce = (cb, delay) => {
   let timeoutId;
+
   return (...rest) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => cb(...rest), delay);
   };
 };
 
-export { getRandomArrayElement, createRandomElementsArray, getRandomDecimal, getRandomNumber, getLatLngString, debounce };
+const translateNumberToWord = (value, words) => {
+  const number1 = value % 100;
+  const number2 = value % 10;
+
+  if (number1 > 10 && number1 < 20) {
+    return words[2];
+  }
+  if (number2 > 1 && number2 < 5) {
+    return words[1];
+  }
+  if (number2 === 1) {
+    return words[0];
+  }
+
+  return words[2];
+};
+
+export { getRandomArrayElement, createRandomElementsArray, getRandomDecimal, getRandomNumber, getLatLngString, debounce, translateNumberToWord };
