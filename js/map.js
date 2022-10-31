@@ -1,6 +1,6 @@
 import { createAdElement } from './advertisement.js';
 
-const NUMBER_OF_ADVERTISEMENTS = 10;
+const NUMBER_OF_BALLOONS = 10;
 
 const TokyoCoordinate = {
   LAT: 35.65283,
@@ -70,7 +70,7 @@ const closeBalloon = () => map.closePopup();
 const renderMarkers = (data) => {
   deleteBalloons();
 
-  data.slice(0, NUMBER_OF_ADVERTISEMENTS).forEach(({ location, ...rest }) => {
+  data.slice(0, NUMBER_OF_BALLOONS).forEach(({ location, ...rest }) => {
     const adMarker = createMarker(location, Icon.AD);
     adMarker
       .addTo(adMarkerGroup)

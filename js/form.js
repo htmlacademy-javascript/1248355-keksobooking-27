@@ -1,21 +1,20 @@
 import { QuerySelector, ClassModifier, createClassName, toggleClass, toggleDisabledState } from './dom-util.js';
-import { setSlider, updateSlider, resetSlider, setInputValueToSlider } from './slider.js';
+import { setSliderSlide, setSliderToMinValue, resetSlider, setInputValueToSlider, toggleSliderdisabledState } from './slider.js';
 import { getLatLngString } from './util.js';
 import { sendData } from './api.js';
 import { showModal } from './form-modal.js';
 import { setAvatarImgChange, setPhotoImgChange, clearImagesPreview } from './image.js';
 
 const adFormElement = document.querySelector(QuerySelector.CLASS_NAME.AD_FORM);
-const capacityELement = adFormElement.querySelector(QuerySelector.ID.CAPASITY);
-const roomNumberElement = adFormElement.querySelector(QuerySelector.ID.ROOM_NUMBER);
+const capacityInputElement = adFormElement.querySelector(QuerySelector.ID.CAPASITY);
+const roomQuantityInputElement = adFormElement.querySelector(QuerySelector.ID.ROOM_NUMBER);
 const typeInputElement = adFormElement.querySelector(QuerySelector.ID.TYPE);
 const priceInputElement = adFormElement.querySelector(QuerySelector.ID.PRICE);
 const timeinInputElement = adFormElement.querySelector(QuerySelector.ID.TIMEIN);
 const timeoutInputElement = adFormElement.querySelector(QuerySelector.ID.TIMEOUT);
-const addressInputElement = document.querySelector(QuerySelector.ID.ADDRESS);
+const addressInputElement = adFormElement.querySelector(QuerySelector.ID.ADDRESS);
 const checkTimeContainerElement = adFormElement.querySelector(QuerySelector.CLASS_NAME.CHECK_TIME_CONTAINER);
 const adFormsfieldsetElements = adFormElement.querySelectorAll(QuerySelector.TAG_NAME.FIELDSET);
-
 const resetBtnElement = adFormElement.querySelector(QuerySelector.CLASS_NAME.RESET_BTN);
 const submitBtnElement = adFormElement.querySelector(QuerySelector.CLASS_NAME.SUBMIT_BTN);
 
@@ -29,11 +28,6 @@ const typeToMinPrice = {
 const idToElement = {
   'timein': timeoutInputElement,
   'timeout': timeinInputElement
-};
-
-const toggleAdFormDisebledState = () => {
-  toggleDisabledState(adFormsfieldsetElements);
-  toggleClass(adFormElement, createClassName(QuerySelector.CLASS_NAME.AD_FORM, ClassModifier.DISABLED));
 };
 
 const updatePriceFieldAttributes = (pristine, isReset = false) => {
@@ -62,15 +56,23 @@ const setCheckTimeChange = () => {
 };
 
 const setCapasityChange = (pristine) => {
-  capacityELement.addEventListener('change', () => {
-    pristine.validate(roomNumberElement);
+  capacityInputElement.addEventListener('change', () => {
+    pristine.validate(roomQuantityInputElement);
+    pristine.validate(capacityInputElement);
+  });
+};
+
+const setRoomsChange = (pristine) => {
+  roomQuantityInputElement.addEventListener('change', () => {
+    pristine.validate(roomQuantityInputElement);
+    pristine.validate(capacityInputElement);
   });
 };
 
 const setTypeChange = (pristine) => {
   typeInputElement.addEventListener('change', () => {
     updatePriceFieldAttributes(pristine);
-    updateSlider(priceInputElement);
+    setSliderToMinValue(priceInputElement);
   });
 };
 
@@ -116,12 +118,19 @@ const setFormEventListeners = (pristine, getCoordinate, resetMap) => {
   setFormSubmit(pristine);
   setTypeChange(pristine);
   setCapasityChange(pristine);
+  setRoomsChange(pristine);
   setCheckTimeChange();
   setPriceChange();
-  setFormReset(pristine, getCoordinate, resetMap);
-  setSlider(priceInputElement, pristine);
   setAvatarImgChange();
   setPhotoImgChange();
+  setFormReset(pristine, getCoordinate, resetMap);
+  setSliderSlide(priceInputElement, pristine);
+};
+
+const toggleAdFormDisebledState = () => {
+  toggleDisabledState(adFormsfieldsetElements);
+  toggleSliderdisabledState();
+  toggleClass(adFormElement, createClassName(QuerySelector.CLASS_NAME.AD_FORM, ClassModifier.DISABLED));
 };
 
 const setInitialFormState = (pristine) => {
@@ -129,4 +138,4 @@ const setInitialFormState = (pristine) => {
   updatePriceFieldAttributes(pristine);
 };
 
-export { setInitialFormState, toggleAdFormDisebledState, updateAddressInputValue, setFormEventListeners, resetBtnElement };
+export { setInitialFormState, toggleAdFormDisebledState, updateAddressInputValue, setFormEventListeners };

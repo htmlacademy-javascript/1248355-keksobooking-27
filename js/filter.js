@@ -1,12 +1,12 @@
 import { QuerySelector, ClassModifier, createClassName, toggleClass, toggleDisabledState } from './dom-util.js';
-import { resetBtnElement } from './form.js';
 
 const filtersFormElement = document.querySelector(QuerySelector.CLASS_NAME.MAP_FILTERS);
 const filterElements = filtersFormElement.querySelectorAll(QuerySelector.CLASS_NAME.MAP_FILTER);
 const featuresFilterContainerElement = filtersFormElement.querySelector(QuerySelector.TAG_NAME.FIELDSET);
 const featureFilterElements = featuresFilterContainerElement.querySelectorAll(QuerySelector.CLASS_NAME.MAP_CHECKBOX_FILTER);
+const resetBtnElement = document.querySelector(QuerySelector.CLASS_NAME.RESET_BTN);
 
-const priceRangeToValue = {
+const priceTypeToValue = {
   low: {
     min: 0,
     max: 10000
@@ -29,7 +29,7 @@ const toggleFiltersDisebledState = () => {
 
 const getDataKey = (inputName) => inputName.slice(inputName.indexOf('-') + 1);
 
-const isPriceInRange = (price, priceRange) => priceRangeToValue[priceRange].min <= price && price <= priceRangeToValue[priceRange].max;
+const isPriceInRange = (price, priceType) => priceTypeToValue[priceType].min <= price && price <= priceTypeToValue[priceType].max;
 
 const findCheckedFeatures = () => {
   const checkedElements = [];
@@ -92,13 +92,13 @@ const applySelectFilters = (data) => data.filter(({ offer }) => {
 
 const filterData = (data) => applyCheckboxFilters(applySelectFilters(data));
 
-const setFilterChange = (cb, data) => {
+const setFiltersChange = (cb, data) => {
   filtersFormElement.addEventListener('change', () => {
     cb(filterData(data));
   });
 };
 
-const setFilterReset = (cb, data) => {
+const setFiltersReset = (cb, data) => {
   resetBtnElement.addEventListener('click', (evt) => {
     evt.preventDefault();
     filtersFormElement.reset();
@@ -107,8 +107,8 @@ const setFilterReset = (cb, data) => {
 };
 
 const setFilterFormEventListeners = (cb, data) => {
-  setFilterChange(cb, data);
-  setFilterReset(cb, data);
+  setFiltersChange(cb, data);
+  setFiltersReset(cb, data);
 };
 
 export { toggleFiltersDisebledState, setFilterFormEventListeners };
