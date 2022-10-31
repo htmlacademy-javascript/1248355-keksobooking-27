@@ -21,7 +21,7 @@ const priceTypeToValue = {
   },
 };
 
-const toggleFiltersDisebledState = () => {
+const toggleFiltersDisabledState = () => {
   toggleDisabledState(filterElements);
   toggleDisabledState(featuresFilterContainerElement);
   toggleClass(filtersFormElement, createClassName(QuerySelector.CLASS_NAME.MAP_FILTERS, ClassModifier.DISABLED));
@@ -111,4 +111,4 @@ const setFilterFormEventListeners = (cb, data) => {
   setFiltersReset(cb, data);
 };
 
-export { toggleFiltersDisebledState, setFilterFormEventListeners };
+export { toggleFiltersDisabledState, setFilterFormEventListeners };
