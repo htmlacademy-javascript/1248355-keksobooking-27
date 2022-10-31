@@ -1,6 +1,8 @@
 import { QuerySelector } from './dom-util.js';
 
 const adFormElement = document.querySelector(QuerySelector.CLASS_NAME.AD_FORM);
+const capacityInputElement = adFormElement.querySelector(QuerySelector.ID.CAPASITY);
+const roomQuantityInputElement = adFormElement.querySelector(QuerySelector.ID.ROOM_NUMBER);
 
 const adFormConfig = {
   classTo: 'ad-form__element',
@@ -16,7 +18,7 @@ const adFormValidatorData = {
     minLength: 30,
     maxLength: 100,
     element: adFormElement.querySelector(QuerySelector.ID.TITLE),
-    validator: function (value) {
+    validationHandler: function (value) {
       return value.trim() && this.minLength <= value.length && value.length <= this.maxLength;
     },
     messageHandler: function (value) {
@@ -31,7 +33,7 @@ const adFormValidatorData = {
     minPrice: 0,
     maxPrice: 100000,
     element: adFormElement.querySelector(QuerySelector.ID.PRICE),
-    validator: function (value) {
+    validationHandler: function (value) {
       this.minPrice = +this.element.min;
       return value && this.minPrice <= +this.element.value && +this.element.value <= this.maxPrice;
     },
@@ -43,27 +45,16 @@ const adFormValidatorData = {
       return `Введите цену от ${this.minPrice} до ${this.maxPrice} руб`;
     },
   },
-  addressField: {
-    element: adFormElement.querySelector(QuerySelector.ID.ADDRESS),
-    validator: function (value) {
-      return !!value;
-    },
-    messageHandler: function (value) {
-      if (!value) {
-        return 'Задайте координаты с помощью ползунка';
-      }
-    },
-  },
-  roomNumberField: {
-    element: adFormElement.querySelector(QuerySelector.ID.ROOM_NUMBER),
-    connectedElement: adFormElement.querySelector(QuerySelector.ID.CAPASITY),
-    roomToMessage: {
+  roomQuantityField: {
+    element: roomQuantityInputElement,
+    connectedElement: capacityInputElement,
+    roomsToMessage: {
       1: '«для 1 гостя»',
       2: '«для 2 гостей» или «для 1 гостя»',
       3: '«для 3, 2 гостей» или «для 1 гостя»',
       100: '«не для гостей»',
     },
-    validator: function (value) {
+    validationHandler: function (value) {
       // Выбрано 100 комнат и любое кол-во гостей кроме не для гостей
       if (+value === 100 && +this.connectedElement.value !== 0) {
         return false;
@@ -78,16 +69,32 @@ const adFormValidatorData = {
       return +value >= +this.connectedElement.value;
     },
     messageHandler: function (value) {
-      return `${this.roomToMessage[value]}`;
+      return `${this.roomsToMessage[value]}`;
     },
   },
+  guestsField: {
+    element: capacityInputElement,
+    connectedElement: roomQuantityInputElement,
+    guestsToMessage: {
+      0: '«выберите 100 комнат»',
+      1: '«выберите 1, 2 или 3 комнаты»',
+      2: '«выберите 2 или 3 комнаты»',
+      3: '«выберите 3 комнаты»',
+    },
+    validationHandler: function () {
+      return this.connectedElement.parentElement.classList.contains('has-success');
+    },
+    messageHandler: function (value) {
+      return `${this.guestsToMessage[value]}`;
+    }
+  }
 };
 
 const createPristine = (validatorData, form, config) => {
   const pristine = new Pristine(form, config);
 
-  Object.values(validatorData).forEach(({ validator, messageHandler, ...rest }) => {
-    pristine.addValidator(rest.element, validator.bind(rest), messageHandler.bind(rest), 100, true);
+  Object.values(validatorData).forEach(({ validationHandler, messageHandler, ...rest }) => {
+    pristine.addValidator(rest.element, validationHandler.bind(rest), messageHandler.bind(rest), 100, true);
   });
 
   return pristine;
